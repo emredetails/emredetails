@@ -2,29 +2,34 @@
    No frameworks. Mobile-first. Apple-level restraint. */
 
 :root{
-  --sectionY: 160px; /* GLOBAL: Abstand zwischen Sections */
-  --sectionY-tight: 220px;
+  --sectionY: 140px; 
+  --sectionY-tight: 180px;
 
-  --bg0:#07080B;
-  --bg1:#0B0D12;
-  --bg2:#0E1020;
-  --card:rgba(255,255,255,.06);
-  --card2:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.10);
-  --stroke2:rgba(255,255,255,.14);
-  --text:rgba(255,255,255,.88);
-  --muted:rgba(255,255,255,.58);
-  --muted2:rgba(237,239,248,.50);
-  --accent:rgba(255,255,255,.82);
-  --accent2:rgba(255,255,255,.72);
+  /* EMRE DETAILS BLUE PALETTE */
+  --bg0:#020408;  /* Tiefes Schwarzblau */
+  --bg1:#050914;  /* Etwas helleres Nachtblau */
+  --bg2:#0B1221;  /* Akzentuiertes Dunkelblau */
+  
+  --card:rgba(20, 30, 50, 0.40); /* Bläulicher Glaseffekt */
+  --card2:rgba(30, 40, 70, 0.25);
+  
+  --stroke:rgba(100, 140, 255, 0.08); /* Feiner blauer Stroke */
+  --stroke2:rgba(100, 140, 255, 0.15);
+  
+  --text:rgba(235, 240, 255, 0.92); /* Kühles Weiß */
+  --muted:rgba(180, 200, 230, 0.65);
+  --muted2:rgba(180, 200, 230, 0.40);
+  
+  --accent:rgba(50, 120, 255, 0.9); /* Emre Blue Highlight */
   --good:#7BFFA8;
-  --shadow: 0 22px 70px rgba(0,0,0,.55);
-  --shadow2: 0 18px 40px rgba(0,0,0,.38);
+  
+  --shadow: 0 22px 70px rgba(0,5,15, 0.65);
+  --shadow2: 0 18px 40px rgba(0,5,15, 0.50);
+  
   --radius:22px;
-  --radius2:16px;
   --max: 1160px;
   --pad: 22px;
-  --blur: 6px;
+  --blur: 12px;
   --ease: cubic-bezier(.2,.8,.2,1);
 }
 
