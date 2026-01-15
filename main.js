@@ -112,50 +112,68 @@
     });
   });
 
+  // --- NEU: FAQ Logic (Accordion) ---
+  qsa('details').forEach(el => {
+    el.addEventListener('toggle', () => {
+      if (el.open) {
+        qsa('details').forEach(other => {
+          if (other !== el) other.removeAttribute('open');
+        });
+      }
+    });
+  });
 
-  // Google Reviews (live via Worker endpoint /reviews)
-  const track = qs('#reviews-track');
-  if (track) loadReviews(track);
+  // --- NEU: Kontaktformular Logic (Cloudflare Pages / ReSend) ---
+  const form = qs('#contact-form');
+  const status = qs('#form-status');
 
-  async function loadReviews(trackEl){
-    try{
-      const resp = await fetch('/reviews', { cache: 'no-store' });
-      if (!resp.ok) return;
-      const data = await resp.json();
-      const reviews = Array.isArray(data.reviews) ? data.reviews.slice(0, 8) : [];
-      if (!reviews.length) return;
+  if (form) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = form.querySelector('button');
+      const originalText = btn.textContent;
+      
+      btn.disabled = true;
+      btn.textContent = "Sende...";
 
-      const createCard = (r) => {
-        const card = document.createElement('article');
-        card.className = 'reviewCard';
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
 
-        const rating = Math.max(1, Math.min(5, Math.round(Number(r.rating) || 5)));
-        const stars = '★★★★★'.slice(0, rating) + '☆☆☆☆☆'.slice(0, 5 - rating);
+      try {
+        // Sendet an Cloudflare Function
+        const resp = await fetch('/api/send', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify(data)
+        });
 
-        card.innerHTML = `
-          <div class="reviewCard__top">
-            <div class="reviewCard__name">${escapeHtml(r.author_name || 'Kunde')}</div>
-            <div class="reviewCard__time">${escapeHtml(r.relative_time || 'Google')}</div>
-          </div>
-          <div class="reviewCard__stars" aria-hidden="true">${stars}</div>
-          <div class="reviewCard__text">${escapeHtml((r.text || '').trim())}</div>
-        `;
-        return card;
-      };
+        if (resp.ok) {
+          status.style.display = 'block';
+          status.textContent = 'Nachricht erfolgreich gesendet!';
+          status.style.color = 'var(--good)'; // Grün aus CSS
+          form.reset();
+          btn.textContent = "Gesendet";
+        } else {
+          throw new Error('Server Error');
+        }
+        
+        setTimeout(() => {
+           btn.disabled = false;
+           btn.textContent = originalText;
+           status.style.display = 'none';
+        }, 4000);
 
-      trackEl.innerHTML = '';
-      reviews.forEach(r => trackEl.appendChild(createCard(r)));
-      reviews.forEach(r => trackEl.appendChild(createCard(r))); // duplicate for loop
-    }catch(e){
-      console.error('Review-Loading failed', e);
-    }
+      } catch (err) {
+        console.error(err);
+        status.style.display = 'block';
+        status.textContent = 'Fehler beim Senden. Bitte WhatsApp nutzen.';
+        status.style.color = '#ff4444';
+        btn.textContent = "Fehler";
+        setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 3000);
+      }
+    });
   }
 
-  function escapeHtml(str){
-    return String(str).replace(/[&<>"']/g, (m) => ({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
-  }
 })();
 
 // =========================
