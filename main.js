@@ -64,7 +64,7 @@
     });
   });
 
-  // 5. Kontaktformular mit DIREKTER Resend Integration
+// 5. Kontaktformular mit DIREKTER Resend Integration & Styled HTML
   const form = qs('#contact-form');
   const status = qs('#form-status');
 
@@ -82,68 +82,101 @@
 
       // Daten auslesen
       const formData = new FormData(form);
-      const name = formData.get('name');
-      const email = formData.get('email');
-      const vehicle = formData.get('vehicle') || '-';
-      const service = formData.get('service') || '-';
-      const message = formData.get('message');
+      const data = Object.fromEntries(formData.entries());
 
-      // --- DEINE RESEND KONFIGURATION ---
-      const API_KEY = 're_123456789'; // <--- HIER DEINEN API KEY REINKOPIEREN (re_...)
-      const TO_EMAIL = 'info@emredetails.de'; // <--- HIER DEINE EMPFÄNGER MAIL
+      // ==========================================
+      // HIER DEINE DATEN EINFÜGEN
+      // ==========================================
+      const API_KEY = 're_fTshEpDM_CP1BtAo2Do44LwUyBewSdEsP'; // <--- API KEY (re_...)
+      const TO_EMAIL = 'info@emredetails.de'; // <--- E-MAIL ADRESSE
+      // ==========================================
+
+      // Styled HTML Template für die Email
+      const emailHtml = `
+        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; background-color: #f2f4f8; padding: 40px 0;">
+          <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.05);">
+            
+            <div style="background-color: #0B1221; padding: 30px; text-align: center;">
+              <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 600;">Neue Anfrage</h1>
+              <p style="color: #a0aec0; margin: 5px 0 0; font-size: 14px;">über emredetails.de</p>
+            </div>
+
+            <div style="padding: 30px;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #edf2f7; color: #718096; font-size: 14px; width: 120px;">Name</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; font-weight: 500; font-size: 15px;">${data.name}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #edf2f7; color: #718096; font-size: 14px;">Email</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; font-weight: 500; font-size: 15px;">
+                    <a href="mailto:${data.email}" style="color: #3b82f6; text-decoration: none;">${data.email}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #edf2f7; color: #718096; font-size: 14px;">Fahrzeug</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; font-weight: 500; font-size: 15px;">${data.vehicle || '-'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #edf2f7; color: #718096; font-size: 14px;">Interesse an</td>
+                  <td style="padding: 10px 0; border-bottom: 1px solid #edf2f7; color: #2d3748; font-weight: 500; font-size: 15px;">${data.service || '-'}</td>
+                </tr>
+              </table>
+
+              <div style="margin-top: 25px;">
+                <p style="color: #718096; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; margin-bottom: 8px;">Nachricht</p>
+                <div style="background-color: #f7fafc; padding: 15px; border-radius: 8px; color: #4a5568; line-height: 1.6; font-size: 15px;">
+                  ${data.message.replace(/\n/g, '<br>')}
+                </div>
+              </div>
+            </div>
+
+            <div style="background-color: #edf2f7; padding: 15px; text-align: center; font-size: 12px; color: #a0aec0;">
+              EmreDetails Web Formular
+            </div>
+          </div>
+        </div>
+      `;
 
       try {
-        const response = await fetch('https://api.resend.com/emails', {
+        const res = await fetch('https://api.resend.com/emails', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${API_KEY}`
           },
           body: JSON.stringify({
-            from: 'EmreDetails Form <onboarding@resend.dev>', // Oder deine verifizierte Domain
+            // WICHTIG: Wenn Domain verifiziert ist: 'info@emredetails.de'
+            // Wenn Domain NICHT verifiziert ist (Test): 'onboarding@resend.dev'
+            from: 'EmreDetails Web <onboarding@resend.dev>', 
             to: TO_EMAIL,
-            subject: `Neue Anfrage von ${name}`,
-            html: `
-              <h3>Neue Nachricht über Webseite</h3>
-              <p><strong>Name:</strong> ${name}</p>
-              <p><strong>Email:</strong> ${email}</p>
-              <p><strong>Fahrzeug:</strong> ${vehicle}</p>
-              <p><strong>Service:</strong> ${service}</p>
-              <hr/>
-              <p>${message.replace(/\n/g, '<br>')}</p>
-            `
+            subject: `Anfrage: ${data.name} (${data.service || 'Allgemein'})`,
+            html: emailHtml
           })
         });
 
-        if (response.ok) {
-          if(status) {
-            status.textContent = "✓ Erfolgreich gesendet!";
-            status.style.color = "#7BFFA8";
-            status.style.display = "block";
+        if (res.ok) {
+          if(status) { 
+            status.textContent = "✓ Erfolgreich gesendet!"; 
+            status.style.color = "#7BFFA8"; 
+            status.style.display = "block"; 
           }
           form.reset();
-          btn.textContent = "Gesendet";
         } else {
-          const errorText = await response.text();
-          console.error("Resend Error:", errorText);
+          // Fehler auslesen
+          const errData = await res.json();
+          console.error("Resend Error:", errData);
           throw new Error('Senden fehlgeschlagen');
         }
-
-      } catch (error) {
-        console.error(error);
-        if(status) {
-          status.textContent = "⚠ Fehler. Bitte WhatsApp nutzen.";
-          status.style.color = "#ff6b6b";
-          status.style.display = "block";
+      } catch (err) {
+        console.error(err);
+        if(status) { 
+          status.textContent = "⚠ Fehler beim Senden. Bitte WhatsApp nutzen."; 
+          status.style.color = "#ff6b6b"; 
+          status.style.display = "block"; 
         }
-        btn.textContent = "Fehler";
       }
-
-      // Button Reset
-      setTimeout(() => {
-        btn.disabled = false;
-        btn.textContent = originalText;
-      }, 3000);
+      setTimeout(() => { btn.disabled = false; btn.textContent = originalText; }, 3000);
     });
   }
 
