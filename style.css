@@ -203,27 +203,16 @@ img{max-width:100%; display:block}
 .pill__icon{opacity:.8}
 
 /* Hero */
-.hero{
+ .hero{
   position:relative;
-  padding: 92px 0 60px; /* Etwas mehr Padding für das Bild */
+  padding: 72px 0 44px;
   overflow:hidden;
-  /* NEU: Hintergrundbild & Maske für transparenten Fade */
-  background-image: url('./hero.jpg');
-  background-size: cover;
-  background-position: center top;
-  background-repeat: no-repeat;
-  min-height: 85vh; 
-  /* Dies erzeugt den "echten" transparenten Fade nach unten */
-  -webkit-mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 75%, transparent 100%);
 }
 .hero__bg{
   position:absolute; inset:-1px;
   background:
     radial-gradient(1200px 760px at 22% 12%, rgba(255,255,255,.08), transparent 62%),
     radial-gradient(900px 680px at 78% 18%, rgba(255,255,255,.05), transparent 66%);
-  /* Optional: Mischmodus für bessere Integration ins Bild */
-  mix-blend-mode: overlay;
 }
 .hero__inner{
   position:relative;
@@ -231,54 +220,49 @@ img{max-width:100%; display:block}
   gap:22px;
   grid-template-columns: 1fr;
   align-items:start;
-  z-index: 2; /* Text über den Hintergrund heben */
 }
 .kicker{
   font-size:13px;
   letter-spacing:.5px;
   text-transform:uppercase;
-  color:rgba(237,239,248,.85); /* Heller gemacht für Lesbarkeit auf Bild */
+  color:rgba(237,239,248,.62);
   margin:0 0 10px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 .h1{
   margin:0;
-  font-weight:600;
+  font-weight:500;
   letter-spacing:-.6px;
   line-height:1.08;
   font-size: clamp(34px, 5.2vw, 56px);
-  text-shadow: 0 4px 20px rgba(0,0,0,0.6);
 }
-.h1__soft{color:rgba(237,239,248,.90); font-weight:400}
+.h1__soft{color:rgba(237,239,248,.74); font-weight:400}
 .lead{
   margin:14px 0 0;
   max-width: 60ch;
-  color:rgba(237,239,248,.90); /* Heller gemacht */
+  color:rgba(237,239,248,.70);
   line-height:1.55;
   font-size: 16px;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
 }
 .hero__cta{
-  margin-top:24px;
+  margin-top:18px;
   display:grid;
   gap:10px;
 }
 .trustRow{
   display:grid;
   gap:10px;
-  margin-top:24px;
+  margin-top:16px;
 }
 .trustRow__item{
-  border:1px solid rgba(255,255,255,.15);
-  background:rgba(20, 30, 60, 0.4); /* Dunkles Glas statt Weiß */
-  backdrop-filter: blur(10px);
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(255,255,255,.03);
   border-radius:18px;
   padding:12px 14px;
 }
 .trustRow__top{
   display:block;
   font-size:12px;
-  color:rgba(237,239,248,.70);
+  color:rgba(237,239,248,.60);
   letter-spacing:.3px;
   text-transform:uppercase;
 }
@@ -286,7 +270,7 @@ img{max-width:100%; display:block}
   display:block;
   margin-top:4px;
   font-size:14px;
-  color:rgba(237,239,248,.95);
+  color:rgba(237,239,248,.88);
 }
 
 .hero__panel{margin-top:12px}
@@ -301,12 +285,14 @@ img{max-width:100%; display:block}
   -webkit-backdrop-filter: blur(var(--blur));
   overflow:hidden;
 }
+
 .glassCard__top{
   display:flex;
   justify-content:space-between;
   gap:12px;
   padding:16px 16px 10px;
 }
+
 .badge{
   font-size:12px;
   letter-spacing:.35px;
@@ -317,6 +303,7 @@ img{max-width:100%; display:block}
   padding:8px 10px;
   border-radius:999px;
 }
+
 .glassCard__grid{
   display:grid;
   grid-template-columns:1fr 1fr;
@@ -341,13 +328,12 @@ img{max-width:100%; display:block}
 }
 .glassCard__bottom .link{border-bottom-color:rgba(237,239,248,.18)}
 
+
 .hero__fade{
   position:absolute;
   inset:auto 0 -1px 0;
   height:86px;
-  /* HIER GEÄNDERT: Transparent gesetzt, da der Fade jetzt über mask-image läuft */
-  background: transparent; 
-  pointer-events: none;
+  background:linear-gradient(180deg, rgba(7,8,13,0), rgba(7,8,13,1));
 }
 
 /* Sections */
