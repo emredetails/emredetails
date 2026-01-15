@@ -998,3 +998,13 @@ body::after{
     black 100%
   );
 }
+.legal__content {
+  color: #ffffff;
+  font-size: 1rem;
+  line-height: 1.6;
+  padding-top: 2rem;
+}
+
+.legal__content p {
+  margin-bottom: 1.25rem;
+}
