@@ -1,100 +1,445 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>EmreDetails – Fahrzeugaufbereitung Marl</title>
-  <meta name="description" content="Premium Fahrzeugaufbereitung in Marl – Innenraumreinigung, Politur, Keramikversiegelung. Jetzt Termin sichern!" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#020408" />
+  <title>Fahrzeugaufbereitung Marl – Lackpolitur, Versiegelung & Pflege | EmreDetails</title>
+  <meta name="description" content="Premium Fahrzeugaufbereitung in Marl. Gründliche Innenreinigung, Lackpolitur und Keramikversiegelung. Keine Kompromisse – nur Ergebnisse." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="./style.css" />
+  <style>
+    /* Spezifische Anpassungen für Video-Card */
+    .videoCard {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      aspect-ratio: 16/9;
+      background: #000;
+    }
+    .videoCard iframe {
+      width: 100%; height: 100%; border: 0;
+    }
+    .hero__socials {
+      display: flex; gap: 10px; margin-top: 14px;
+      justify-content: center; /* Zentriert unter Video */
+    }
+  </style>
 </head>
+
 <body>
+  <a class="skip" href="#content">Zum Inhalt</a>
+
   <header class="topbar" data-elevate>
     <div class="container topbar__inner">
-      <a class="brand" href="./index.html" aria-label="Startseite EmreDetails">
-        <img class="brand__logo" src="./logo.png" alt="EmreDetails Logo" loading="eager">
+      <a class="brand" href="./index.html" aria-label="EmreDetails Startseite">
+        <img class="brand__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="EmreDetails Logo" loading="eager">
       </a>
-      <nav class="nav">
+
+      <nav class="nav" aria-label="Hauptmenü">
+        <a class="nav__link" href="./index.html">Home</a>
         <a class="nav__link" href="./leistungen.html">Leistungen</a>
         <a class="nav__link" href="./kontakt.html">Kontakt</a>
       </nav>
+
       <div class="topbar__actions">
-        <a class="pill pill--ghost" href="https://instagram.com/emredetails" target="_blank" rel="noreferrer">Instagram</a>
-        <a class="pill pill--primary" href="https://wa.me/491714745229" target="_blank" rel="noreferrer">WhatsApp</a>
+        <a class="pill pill--primary" href="https://wa.me/4915755821180" target="_blank" rel="noreferrer">
+          <img class="pill__img" src="./whatsapp.png" alt="" loading="lazy"> WhatsApp
+        </a>
+
+        <button class="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobileNav" id="mobileNav" hidden>
+      <div class="container mobileNav__inner">
+        <a class="mobileNav__link" href="./index.html">Home</a>
+        <a class="mobileNav__link" href="./leistungen.html">Leistungen</a>
+        <a class="mobileNav__link" href="./kontakt.html">Kontakt</a>
+        <div class="mobileNav__cta">
+          <a class="pill pill--primary pill--full" href="https://wa.me/4915755821180" target="_blank" rel="noreferrer">
+            <img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp Anfrage
+          </a>
+        </div>
       </div>
     </div>
   </header>
 
   <main id="content">
+    
+    <section class="hero bgSection fade-bottom">
+      <div class="container hero__inner">
+        
+        <div class="hero__copy">
+          <p class="kicker reveal">Fahrzeugaufbereitung in Marl & Umgebung</p>
+          <h1 class="h1 reveal" data-kinetic>
+            Keine Kompromisse.<br>
+            <span class="h1__soft" style="--wi: 6;">Nur Ergebnisse.</span>
+          </h1>
+          <p class="lead reveal">
+            Ob Alltag, Leasingrückgabe oder Leidenschaft – ein gepflegtes Fahrzeug fährt sich anders. 
+            Wir denken nicht in "mal eben sauber machen", sondern in Präzision, Tiefenglanz und Werterhalt.
+          </p>
 
-    <section class="section hero">
-      <div class="container">
-        <div class="hero__inner">
-          <div class="hero__content reveal">
-            <h1>Detailverliebt bis ins letzte Finish</h1>
-            <p>Fahrzeugaufbereitung mit Anspruch. Für alle, die mehr erwarten als „sauber“.</p>
-            <a href="./leistungen.html" class="pill pill--primary">Leistungen entdecken</a>
+          <div class="hero__cta reveal">
+            <a class="pill pill--primary pill--lg glass6" href="./leistungen.html">
+              Leistungen ansehen
+            </a>
+            <a class="pill pill--ghost pill--lg glass6" href="./kontakt.html">
+              Termin vereinbaren
+            </a>
+          </div>
+
+          <div class="trustRow" role="list">
+            <div class="trustRow__item glass6 reveal" role="listitem">
+              <span class="trustRow__top">Fokus</span>
+              <span class="trustRow__bottom">Detailing & Pflege</span>
+            </div>
+            <div class="trustRow__item glass6 reveal" role="listitem">
+              <span class="trustRow__top">Spezialgebiet</span>
+              <span class="trustRow__bottom">Lackkorrektur</span>
+            </div>
+            <div class="trustRow__item glass6 reveal" role="listitem">
+              <span class="trustRow__top">Schutz</span>
+              <span class="trustRow__bottom">Keramik & Versiegelung</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero__panel reveal">
+          <div class="videoCard shimmer">
+            <iframe src="https://www.youtube.com/embed/rgNpZKLtmhQ?rel=0&controls=0&autoplay=1&mute=1&loop=1&playlist=rgNpZKLtmhQ" title="Emre Details Work" allow="autoplay; encrypted-media"></iframe>
+          </div>
+          
+          <div class="hero__socials">
+            <a class="pill pill--ghost glass6" href="https://www.instagram.com/emredetails/" target="_blank">
+              <img class="pill__img" src="./insta.jpg" alt=""> Instagram
+            </a>
+            <a class="pill pill--ghost glass6" href="https://www.tiktok.com/@emredetails" target="_blank">
+               TikTok
+            </a>
+            <a class="pill pill--ghost glass6" href="https://www.youtube.com/@EmreDetails" target="_blank">
+               YouTube
+            </a>
           </div>
         </div>
       </div>
     </section>
 
-    <section class="section video reveal">
+    <section class="section section--tight" id="bewertungen">
       <div class="container">
-        <iframe allow="autoplay; encrypted-media" allowfullscreen="" frameborder="0" src="https://www.youtube.com/embed/rgNpZKLtmhQ?rel=0&amp;controls=0&amp;autoplay=1&amp;mute=1&amp;start=0" style="position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:auto" title="Audi SQ5 Full Interior Clean - Detailing a Luxury SUV!"></iframe>
+        <div class="sectionHead reveal">
+          <h2 class="h2">5.0 Sterne – live aus Google.</h2>
+          <p class="sub">
+            Ehrliches Feedback unserer Kunden. Wir überzeugen durch Leistung, nicht durch Versprechen.
+          </p>
+        </div>
+
+        <div class="reviewsBox reveal">
+          <div class="reviewsBox__top">
+            <div class="reviewsBox__score">
+              <div class="reviewsBox__num">5.0</div>
+              <div class="reviewsBox__meta">
+                <div class="reviewsBox__stars" aria-hidden="true">★★★★★</div>
+                <div class="reviewsBox__hint">22+ Rezensionen</div>
+              </div>
+            </div>
+
+            <a class="pill pill--ghost" href="https://www.google.com/search?q=emredetails+marl" target="_blank" rel="noreferrer">
+              <span class="pill__icon" aria-hidden="true">
+                <span class="gDot"></span>
+              </span>
+              Google Profil
+            </a>
+          </div>
+
+          <div class="reviewsMarquee" aria-label="Kundenbewertungen">
+            <div class="reviewsTrack">
+              <article class="reviewCard">
+                <div class="reviewCard__top"><div class="reviewCard__name">Justin M.</div><div class="reviewCard__time">vor 1 Monat</div></div>
+                <div class="reviewCard__stars">★★★★★</div>
+                <div class="reviewCard__text">Super Arbeit! Mein Wagen sieht aus wie neu. Emre nimmt sich wirklich Zeit für jedes Detail.</div>
+              </article>
+              <article class="reviewCard">
+                <div class="reviewCard__top"><div class="reviewCard__name">Sarah K.</div><div class="reviewCard__time">vor 2 Monaten</div></div>
+                <div class="reviewCard__stars">★★★★★</div>
+                <div class="reviewCard__text">Leasingrückgabe gerettet. Alle Kratzer rausbekommen, keine Nachzahlung. Danke!</div>
+              </article>
+              <article class="reviewCard">
+                <div class="reviewCard__top"><div class="reviewCard__name">Michael B.</div><div class="reviewCard__time">vor 3 Wochen</div></div>
+                <div class="reviewCard__stars">★★★★★</div>
+                <div class="reviewCard__text">Keramikversiegelung ist der Hammer. Wasser perlt einfach ab. Top Beratung vorab.</div>
+              </article>
+              <article class="reviewCard">
+                <div class="reviewCard__top"><div class="reviewCard__name">Ahmet Y.</div><div class="reviewCard__time">vor 4 Monaten</div></div>
+                <div class="reviewCard__stars">★★★★★</div>
+                <div class="reviewCard__text">Sehr professionell und freundlich. Innenraumreinigung war extrem gründlich. Gerne wieder.</div>
+              </article>
+              <article class="reviewCard">
+                <div class="reviewCard__top"><div class="reviewCard__name">Tobias S.</div><div class="reviewCard__time">vor 2 Monaten</div></div>
+                <div class="reviewCard__stars">★★★★★</div>
+                <div class="reviewCard__text">Habe meinen Oldtimer hier aufbereiten lassen. Der Lack glänzt wieder wie am ersten Tag.</div>
+              </article>
+              <article class="reviewCard">
+                <div class="reviewCard__top"><div class="reviewCard__name">Lisa P.</div><div class="reviewCard__time">vor 1 Monat</div></div>
+                <div class="reviewCard__stars">★★★★★</div>
+                <div class="reviewCard__text">Schnelle Terminvergabe und super Ergebnis bei der Polsterreinigung.</div>
+              </article>
+               <article class="reviewCard">
+                <div class="reviewCard__top"><div class="reviewCard__name">Justin M.</div><div class="reviewCard__time">vor 1 Monat</div></div>
+                <div class="reviewCard__stars">★★★★★</div>
+                <div class="reviewCard__text">Super Arbeit! Mein Wagen sieht aus wie neu. Emre nimmt sich wirklich Zeit für jedes Detail.</div>
+              </article>
+              <article class="reviewCard">
+                <div class="reviewCard__top"><div class="reviewCard__name">Sarah K.</div><div class="reviewCard__time">vor 2 Monaten</div></div>
+                <div class="reviewCard__stars">★★★★★</div>
+                <div class="reviewCard__text">Leasingrückgabe gerettet. Alle Kratzer rausbekommen, keine Nachzahlung. Danke!</div>
+              </article>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="section process reveal">
+    <section class="section" id="leistungen">
       <div class="container">
-        <div class="sectionHead">
-          <h2 class="h2">So läuft’s ab</h2>
-          <p class="sub">Schnell, einfach, effizient</p>
+        <div class="sectionHead reveal">
+          <div class="divGlow"></div>
+          <h2 class="h2">Leistungen im Überblick.</h2>
+          <p class="sub">
+            Individuell abgestimmt auf Zustand, Nutzung und Anspruch.
+            Vom Daily Driver bis zum Liebhaberfahrzeug.
+          </p>
         </div>
-        <div class="process__grid">
-          <div class="process__item"><strong>1. Anfrage</strong><br />Über WhatsApp, Telefon oder Kontaktformular</div>
-          <div class="process__item"><strong>2. Beratung</strong><br />Besichtigung & individuelles Angebot</div>
-          <div class="process__item"><strong>3. Durchführung</strong><br />Aufbereitung nach Terminvereinbarung</div>
+
+        <div class="cards">
+          <article class="card reveal" data-tilt>
+            <div class="card__top">
+              <span class="chip">Interieur</span>
+              <span class="muted">Frische & Hygiene</span>
+            </div>
+            <h3 class="h3">Innenaufbereitung</h3>
+            <p class="p">
+              Ein spürbar frischer Innenraum, der sauber, gepflegt und geruchsfrei ist.
+              Tiefenreinigung für Polster, Leder und Kunststoffe.
+            </p>
+            <ul class="list">
+              <li>Polster- & Teppichreinigung</li>
+              <li>Lederpflege & Cockpit</li>
+              <li>Geruchsentfernung</li>
+            </ul>
+            <div class="card__bottom">
+              <div class="metric__value" style="font-size:20px; margin-bottom:12px;">ab 100 €</div>
+              <a class="pill pill--ghost pill--full" href="./leistungen.html">Details ansehen</a>
+            </div>
+          </article>
+
+          <article class="card reveal" data-tilt>
+            <div class="card__top">
+              <span class="chip">Exterieur</span>
+              <span class="muted">Glanz & Pflege</span>
+            </div>
+            <h3 class="h3">Außenaufbereitung</h3>
+            <p class="p">
+              Ein Auftritt, der glänzt. Gründliche Handwäsche, Felgenreinigung und Lackdekontamination 
+              für einen gepflegten Eindruck.
+            </p>
+            <ul class="list">
+              <li>Schonende Handwäsche</li>
+              <li>Felgen- & Radkastenreinigung</li>
+              <li>Flugrostentfernung</li>
+            </ul>
+            <div class="card__bottom">
+              <div class="metric__value" style="font-size:20px; margin-bottom:12px;">ab 60 €</div>
+              <a class="pill pill--ghost pill--full" href="./leistungen.html">Details ansehen</a>
+            </div>
+          </article>
+
+          <article class="card reveal" data-tilt>
+            <div class="card__top">
+              <span class="chip">Premium</span>
+              <span class="muted">Korrektur & Schutz</span>
+            </div>
+            <h3 class="h3">Politur & Versiegelung</h3>
+            <p class="p">
+              Kratzerfreier Lack mit starkem Schutz. Wir entfernen Swirls und Defekte und 
+              versiegeln die Oberfläche langfristig (Wachs oder Keramik).
+            </p>
+            <ul class="list">
+              <li>Mehrstufige Lackpolitur</li>
+              <li>Entfernung von Kratzern</li>
+              <li>Langzeit-Keramikversiegelung</li>
+            </ul>
+            <div class="card__bottom">
+              <div class="metric__value" style="font-size:20px; margin-bottom:12px;">ab 250 €</div>
+              <a class="pill pill--ghost pill--full" href="./leistungen.html">Details ansehen</a>
+            </div>
+          </article>
         </div>
       </div>
     </section>
 
-    <section class="section map reveal">
+    <section class="section section--soft">
       <div class="container">
-        <div class="sectionHead">
-          <h2 class="h2">Standort</h2>
-          <p class="sub">Nur mit Termin – gesichert im Garagenpark</p>
+        <div class="sectionHead reveal">
+          <h2 class="h2">Der Ablauf: Klar & Strukturiert.</h2>
+          <p class="sub">
+            Wir arbeiten nicht nach Stoppuhr, sondern nach Ergebnis. 
+            So kommen wir gemeinsam zum Ziel.
+          </p>
         </div>
-        <iframe src="https://www.google.com/maps?q=Benzstraße+15b,+45772+Marl&output=embed" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+        <div class="steps">
+          <div class="step reveal">
+            <div class="step__nr">01</div>
+            <div class="step__body">
+              <div class="step__title">Anfrage</div>
+              <div class="step__text">Kontakt einfach per WhatsApp oder Telefon. Kurze Info zum Fahrzeug genügt.</div>
+            </div>
+          </div>
+
+          <div class="step reveal">
+            <div class="step__nr">02</div>
+            <div class="step__body">
+              <div class="step__title">Besichtigung & Angebot</div>
+              <div class="step__text">Wir schauen uns den Wagen an. Du erhältst ein faires Festpreis-Angebot.</div>
+            </div>
+          </div>
+
+          <div class="step reveal">
+            <div class="step__nr">03</div>
+            <div class="step__body">
+              <div class="step__title">Termin & Durchführung</div>
+              <div class="step__text">Professionelle Bearbeitung vor Ort in Marl. In Ruhe und mit Sorgfalt.</div>
+            </div>
+          </div>
+
+          <div class="step reveal">
+            <div class="step__nr">04</div>
+            <div class="step__body">
+              <div class="step__title">Übergabe</div>
+              <div class="step__text">Du bekommst deinen Wagen zurück – sauberer als am Tag der Auslieferung.</div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="sectionHead reveal">
+          <h2 class="h2">Häufige Fragen.</h2>
+        </div>
+        
+        <div class="cards" style="grid-template-columns: 1fr;"> <details class="faqCard reveal">
+             <summary class="h3 faqSummary">Wie lange dauert eine Aufbereitung?</summary>
+             <p class="p">Je nach Zustand und gebuchtem Paket zwischen 4 und 8 Stunden. Bei Keramikversiegelungen kann das Fahrzeug auch über Nacht bleiben, um auszuhärten.</p>
+           </details>
+           <details class="faqCard reveal">
+             <summary class="h3 faqSummary">Was kostet eine Aufbereitung genau?</summary>
+             <p class="p">Der Preis richtet sich nach dem Lackzustand und der Größe des Fahrzeugs. Wir nennen dir nach einer kurzen Besichtigung einen verbindlichen Preis – ohne versteckte Kosten.</p>
+           </details>
+           <details class="faqCard reveal">
+             <summary class="h3 faqSummary">Lohnt sich Keramikversiegelung?</summary>
+             <p class="p">Ja, wenn dir Werterhalt und einfache Reinigung wichtig sind. Der Lack wird härter, glatter und extrem wasserabweisend.</p>
+           </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section bgSection fade-top" id="kontakt">
+      <div class="container">
+        <div class="contact">
+          <div class="contact__left">
+            <h2 class="h2">Interesse geweckt?</h2>
+            <p class="sub">
+              Schreib mir kurz per WhatsApp oder nutze das Kontaktformular. 
+              Wir finden die passende Lösung für dein Auto.
+            </p>
+
+            <div class="contact__actions">
+              <a class="pill pill--primary pill--lg pill--full glass6" href="https://wa.me/4915755821180" target="_blank" rel="noreferrer">
+                <img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp öffnen
+              </a>
+              <a class="pill pill--ghost pill--lg pill--full glass6" href="./kontakt.html">
+                Zum Kontaktformular
+              </a>
+            </div>
+
+            <div class="contact__meta">
+              <div class="metaLine glass6">
+                <span class="metaLine__k">Standort</span>
+                <span class="metaLine__v">Hebbelstr. 75, 45768 Marl</span>
+              </div>
+              <div class="metaLine glass6 reveal">
+                <span class="metaLine__k">Kontakt</span>
+                <span class="metaLine__v">+49 1575 5821180</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="contact__right">
+            <div class="mapCard">
+              <div class="mapCard__top glass6 reveal">
+                <div class="mapCard__title">Anfahrt</div>
+                <a class="mapCard__link" href="https://goo.gl/maps/PLACEHOLDER_LINK" target="_blank" rel="noreferrer">Route öffnen</a>
+              </div>
+              <div class="mapCard__frame">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2482.484617466548!2d7.1147!3d51.658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNTHCsDM5JzI4LjgiTiA3wrAwNyc1Mi45IkU!5e0!3m2!1sde!2sde!4v1600000000000!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+              </div>
+              <div class="mapCard__bottom glass6">
+                <span class="muted">Adresse:</span> Hebbelstr. 75, Marl
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <div class="footer__left">
+          <div class="footer__brand">
+             <img class="footer__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="EmreDetails" loading="lazy">
+          </div>
+          <div class="footer__sub">
+            Professionelle Fahrzeugaufbereitung in Marl.
+            Keine Kompromisse bei Sauberkeit und Lackschutz.
+          </div>
+          <div class="footer__social">
+             <a href="https://www.instagram.com/emredetails/" target="_blank">Instagram</a> • 
+             <a href="https://www.youtube.com/@EmreDetails" target="_blank">YouTube</a>
+          </div>
+        </div>
+
+        <div class="footer__right">
+          <div class="footer__legal" role="list">
+            <a class="footer__link" href="./impressum.html" role="listitem">Impressum</a>
+            <a class="footer__link" href="./agb.html" role="listitem">AGB</a>
+            <a class="footer__link" href="./datenschutz.html" role="listitem">Datenschutz</a>
+          </div>
+          <div class="footer__copy">
+            © <span id="year"></span> EmreDetails
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <a class="fab" href="https://wa.me/4915755821180" target="_blank" rel="noreferrer" aria-label="WhatsApp Kontakt">
+      <span class="fab__ring" aria-hidden="true"></span>
+      <img class="fab__img" src="./whatsapp.png" alt="">
+      <span class="fab__text">WhatsApp</span>
+    </a>
   </main>
 
-  <footer class="footer">
-    <div class="container footer__inner">
-      <div class="footer__left">
-        <div class="footer__brand">
-          <img class="footer__logo" src="./logo.png" alt="EmreDetails">
-        </div>
-        <div class="footer__sub">
-          Fahrzeugaufbereitung in Marl mit Fokus auf Innenreinigung, Lackkorrektur und Keramikversiegelung.
-        </div>
-      </div>
-      <div class="footer__right">
-        <div class="footer__legal">
-          <a class="footer__link" href="./impressum.html">Impressum</a>
-          <a class="footer__link" href="./agb.html">AGB</a>
-          <a class="footer__link" href="./datenschutz.html">Datenschutz</a>
-        </div>
-        <div class="footer__copy">© <span id="year"></span> EmreDetails</div>
-      </div>
-    </div>
-  </footer>
-
-  <a class="fab" href="https://wa.me/4915755821180" target="_blank" rel="noreferrer">
-    WhatsApp
-  </a>
-
-  <script src="./main_full.js" defer></script>
+  <script src="./main.js" defer></script>
 </body>
 </html>
