@@ -1,1 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#020408" />
+  <title>Kontakt & Anfahrt | EmreDetails Marl</title>
+  <link rel="stylesheet" href="./style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Form Styles */
+    .form-group { margin-bottom: 18px; }
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 14px;
+      border-radius: 14px;
+      color: #fff;
+      font-family: inherit;
+      transition: 0.3s;
+    }
+    .form-input:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.08); }
+    .form-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 16px;
+      border-radius: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .form-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+  </style>
+</head>
 
+<body>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="./index.html"><img class="brand__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="Logo"></a>
+      <nav class="nav">
+        <a class="nav__link" href="./index.html">Home</a>
+        <a class="nav__link" href="./leistungen.html">Leistungen</a>
+        <a class="nav__link" href="./kontakt.html">Kontakt</a>
+      </nav>
+      <div class="topbar__actions"><a class="pill pill--primary" href="https://wa.me/4915755821180">WhatsApp</a></div>
+    </div>
+  </header>
+
+  <main id="content">
+    <section class="section bgSection fade-bottom" style="padding-top:120px;">
+      <div class="container">
+        <div class="contact" style="grid-template-columns: 1fr 1fr; gap:40px;">
+          
+          <div class="contact__left">
+            <h1 class="h2 reveal">Lass uns sprechen.</h1>
+            <p class="sub reveal">Du hast Fragen zu einer Aufbereitung oder möchtest direkt einen Termin? Schreib mir.</p>
+            
+            <div class="contact__meta reveal" style="margin-top:30px;">
+              <a href="https://wa.me/4915755821180" class="metaLine glass6" style="text-decoration:none; margin-bottom:10px;">
+                 <span class="metaLine__k">WhatsApp</span>
+                 <span class="metaLine__v">Direkt Chat starten -></span>
+              </a>
+              <a href="mailto:info@emredetails.de" class="metaLine glass6" style="text-decoration:none;">
+                 <span class="metaLine__k">Email</span>
+                 <span class="metaLine__v">info@emredetails.de</span>
+              </a>
+            </div>
+          </div>
+
+          <div class="contact__right reveal">
+            <div class="glassCard" style="padding:22px;">
+              <form id="contact-form">
+                <div class="form-group">
+                  <input type="text" name="name" class="form-input" placeholder="Dein Name" required>
+                </div>
+                <div class="form-group">
+                  <input type="email" name="email" class="form-input" placeholder="Deine E-Mail" required>
+                </div>
+                <div class="form-group">
+                  <input type="text" name="vehicle" class="form-input" placeholder="Fahrzeugmodell (z.B. Golf 7, BMW 3er)">
+                </div>
+                <div class="form-group">
+                  <select name="service" class="form-input" style="color:var(--muted)">
+                    <option value="" disabled selected>Gewünschte Leistung</option>
+                    <option value="Innen">Innenaufbereitung</option>
+                    <option value="Außen">Außenaufbereitung</option>
+                    <option value="Komplett">Komplettpaket</option>
+                    <option value="Beratung">Allgemeine Frage</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <textarea name="message" class="form-input" rows="4" placeholder="Deine Nachricht..." required></textarea>
+                </div>
+                <button type="submit" class="form-btn">Anfrage absenden</button>
+                <p id="form-status" style="margin-top:10px; font-size:13px; color:var(--good); display:none;">Nachricht gesendet! Wir melden uns.</p>
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+  </main>
+  
+  <script src="./main.js" defer></script>
+</body>
+</html>
