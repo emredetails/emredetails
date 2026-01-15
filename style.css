@@ -1008,3 +1008,28 @@ body::after{
 .legal__content p {
   margin-bottom: 1.25rem;
 }
+
+body {
+  color: #ffffff !important;
+  background-color: #0b1f3a !important;
+}
+
+.legal__content,
+.legal__content p {
+  color: #ffffff !important;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.25rem;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+.legal__content strong {
+  color: #ffffff !important;
+}
+
+.reveal.visible {
+  opacity: 1 !important;
+  transform: none !important;
+}
