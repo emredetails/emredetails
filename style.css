@@ -1286,3 +1286,30 @@ body::before {
     radial-gradient(120% 120% at 18% 0%, rgba(255,255,255,.10), transparent 55%),
     rgba(20, 30, 50, 0.4) !important; /* Leicht transparenter als vorher */
 }
+/* =========================================
+   11. Apple-Style Scroll Reveal (Staggered)
+   ========================================= */
+
+/* Grundzustand: Unsichtbar & leicht nach unten versetzt */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 30px, 0); /* Kommt von unten */
+  transition: 
+    opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), 
+    transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  
+  /* Das ist der Trick: Die Verzögerung wird per JS gesteuert */
+  transition-delay: var(--d, 0ms); 
+  will-change: opacity, transform;
+}
+
+/* Zustand wenn im Bild (Klasse wird per JS gesetzt) */
+.reveal.is-in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Optional: Wenn Nutzer "Bewegung reduzieren" im OS eingestellt hat */
+@media (prefers-reduced-motion: reduce) {
+  .reveal { transition: none; opacity: 1; transform: none; }
+}
