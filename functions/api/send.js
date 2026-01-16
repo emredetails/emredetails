@@ -1,9 +1,11 @@
 export async function onRequestPost({ request, env }) {
   try {
-    const { name, email, vehicle, service, message } = await request.json();
+    // WICHTIG: Hier muss 'telefon' mit in der Klammer stehen!
+    const { name, email, vehicle, service, message, telefon } = await request.json();
 
+    // Validierung (Telefon ist optional, daher hier nicht zwingend geprüft)
     if (!name || !email || !message) {
-      return new Response(JSON.stringify({ error: "Bitte alle Felder ausfüllen." }), { status: 400 });
+      return new Response(JSON.stringify({ error: "Bitte alle Pflichtfelder ausfüllen." }), { status: 400 });
     }
 
     // HTML Template für die E-Mail
@@ -20,7 +22,7 @@ export async function onRequestPost({ request, env }) {
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
               <tr>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">Email:</td>
-                <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><b>${email}</b></td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><b><a href="mailto:${email}" style="color:#0B1221; text-decoration:none;">${email}</a></b></td>
               </tr>
               <tr>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">Telefon:</td>
@@ -49,11 +51,11 @@ export async function onRequestPost({ request, env }) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${env.RESEND_API_KEY}` // Holt Key aus Cloudflare Settings
+        'Authorization': `Bearer ${env.RESEND_API_KEY}`
       },
       body: JSON.stringify({
-        from: 'EmreDetails Web <onboarding@resend.dev>', // Sobald Domain verifiziert: info@emredetails.de
-        to: 'info@emredetails.de', // DEINE EMPFÄNGER MAIL
+        from: 'EmreDetails Web <onboarding@resend.dev>', // Oder deine verifizierte Domain
+        to: 'info@emredetails.de', 
         subject: `Anfrage von ${name}`,
         html: emailHtml
       })
