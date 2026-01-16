@@ -954,6 +954,16 @@ body::after{
   z-index: 1;
 }
 
+.fade-bottom::before{
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+  mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
+}
+
+.fade-top::before{
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 55%, black 100%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 55%, black 100%);
+}
+
 /* Glass: 6px blur */
 .glass6{
   background: rgba(255,255,255,0.06);
