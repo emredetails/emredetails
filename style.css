@@ -1042,3 +1042,27 @@ body {
   opacity: 1 !important;
   transform: none !important;
 }
+/* =========================================
+   7. Ablauf Animation (Sequentiell Blau)
+   ========================================= */
+.step {
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* Dieser Status wird per JS hinzugefügt */
+.step.step--active {
+  border-color: var(--accent); /* Dein Blau */
+  background: linear-gradient(135deg, rgba(50, 120, 255, 0.1), rgba(255,255,255,0.03));
+  box-shadow: 0 10px 30px rgba(50, 120, 255, 0.15); /* Blauer Glow */
+  transform: translateY(-4px); /* Leichtes Anheben */
+}
+
+/* Die Nummer wird gefüllt */
+.step.step--active .step__nr {
+  background-color: var(--accent);
+  color: #ffffff;
+  border-color: var(--accent);
+  box-shadow: 0 0 15px rgba(50, 120, 255, 0.6); /* Leuchten der Zahl */
+  transform: scale(1.1);
+  transition: all 0.4s ease;
+}
