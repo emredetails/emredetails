@@ -1260,13 +1260,23 @@ body::before {
     radial-gradient(1200px 900px at 50% 110%, rgba(0,0,0,.62), transparent 58%) !important;
 }
 
-/* 2. Leistungen: Sehr weicher, langer Fade (Transparent -> Bild) */
+/* 2. Leistungen: Extrem weicher, langgezogener Fade */
 .fade-both::before {
-  /* 0% bis 30% ist Fade-In, 70% bis 100% ist Fade-Out -> Sehr weich */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 60%, transparent 100%) !important;
-  mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 60%, transparent 100%) !important;
+  /* Erklärung der Werte:
+     - 0% bis 45%: Langer Fade-In (von transparent zu sichtbar)
+     - 45% bis 55%: Kurzer Bereich voller Sichtbarkeit in der Mitte
+     - 55% bis 100%: Langer Fade-Out (von sichtbar zu transparent)
+  */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 45%, black 55%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 45%, black 55%, transparent 100%) !important;
   
-  /* Sicherheitshalber Opacity fixieren, damit es sichtbar ist */
+  /* Damit die Maske sicher greift */
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+
+  /* Opacity Steuerung */
   opacity: var(--bg-op, 0.4) !important; 
 }
 
