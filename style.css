@@ -1103,54 +1103,65 @@ body {
   grid-template-columns: 1fr !important; /* Immer einspaltig */
 }
 /* =========================================
-   9. Floating Navbar (Schwebende Insel)
+   9. Floating Navbar (Glas-Insel V2)
    ========================================= */
 
 .topbar {
-  /* Positionierung & Abstand */
+  /* Positionierung */
   position: sticky;
-  top: 16px;                  /* Klebt mit Abstand oben */
-  margin-top: 16px;           /* Initialer Abstand */
+  top: 16px;
+  margin-top: 16px;
   z-index: 1000;
   
   /* Größe & Zentrierung */
-  width: calc(100% - 32px);   /* Links/Rechts je 16px Platz */
-  max-width: var(--max);      /* Nicht breiter als der Content max. */
+  /* Nimmt volle Breite minus 32px Abstand zum Rand, maximal aber die Seitenbreite */
+  width: min(var(--max), calc(100% - 32px));
   margin-left: auto;
   margin-right: auto;
 
-  /* Look & Feel (Pill Design) */
-  background: rgba(2, 4, 8, 0.85); /* Dunkel & transparent */
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  /* Look: Mehr Transparenz für Glass-Effekt */
+  background: rgba(2, 4, 8, 0.20); /* Transparenter, damit Blur wirkt */
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   
-  border: 1px solid rgba(255, 255, 255, 0.12); /* Feiner Rahmen rundherum */
-  border-radius: 20px;        /* Runde Ecken */
-  box-shadow: 0 10px 40px rgba(0,0,0,0.6); /* Tiefer Schatten */
+  /* Feinerer Rahmen */
+  border: 0.5px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px; /* Etwas runder */
+  
+  /* Schatten für Tiefe */
+  box-shadow: 
+    0 4px 6px rgba(0,0,0,0.05),
+    0 12px 24px rgba(0,0,0,0.15);
 }
 
-/* Anpassung des inneren Containers für die Pill-Form */
+/* Anpassung des inneren Containers */
 .topbar .container {
   width: 100%;
   margin: 0;
-  padding: 0 24px; /* Mehr seitlicher Abstand innen */
+  /* WICHTIG: Mehr Abstand innen, damit Button nicht am Rand klebt */
+  padding: 0 20px; 
 }
 
-/* Entfernt den alten Strich unten, da wir jetzt einen Rahmen haben */
-.topbar { border-bottom: 1px solid rgba(255, 255, 255, 0.12); }
+/* Entfernt den alten Strich unten */
+.topbar { border-bottom: none; }
 
-/* Korrektur für das Mobile Menü innerhalb der Pill */
+/* Korrektur für das Mobile Menü */
 .mobileNav {
-  background: transparent; /* Nimmt Hintergrund der Topbar an */
-  border-bottom: none;
-  border-top: 1px solid rgba(255,255,255,0.08);
+  background: rgba(2, 4, 8, 0.95); /* Etwas dunkler für Lesbarkeit */
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 0.5px solid rgba(255,255,255,0.1);
   width: 100%;
-  border-radius: 0 0 20px 20px; /* Unten abrunden */
-  padding-bottom: 10px;
+  border-radius: 0 0 24px 24px; /* Unten passend abrunden */
+  padding-bottom: 12px;
+  margin-top: -1px; /* Nahtloser Übergang */
 }
 
-/* Versteckt den Pseudo-Hintergrund beim Scrollen (nicht mehr nötig) */
+/* Versteckt den alten Pseudo-Hintergrund */
 .topbar::before { display: none !important; }
 
-/* Optional: Navbar etwas kompakter machen */
-.topbar__inner { padding: 10px 0; }
+/* Inhalte vertikal mittig */
+.topbar__inner { 
+  padding: 12px 0; 
+  min-height: 64px; /* Stellt sicher, dass die Bar nicht zu flach ist */
+}
