@@ -148,7 +148,7 @@
     });
   });
 
-  // 7. NEU: Ablauf Animation (Sequentiell Blau bei Scroll)
+  // 7. Ablauf Animation (Sequentiell Blau bei Scroll)
   const stepsContainer = qs('.steps');
   if (stepsContainer) {
     const steps = qsa('.step', stepsContainer);
@@ -173,5 +173,20 @@
     
     stepObserver.observe(stepsContainer);
   }
+
+  // 8. NEU: Smart Staggering (Kaskaden-Effekt für Listen)
+  // Das sorgt dafür, dass Elemente nacheinander reinfliegen statt gleichzeitig
+  const staggerGroups = qsa('.cards, .steps, .trustRow, .service-grid, .faq-grid, .hero__cta, .hero__socials, .reviewsTrack');
+  
+  staggerGroups.forEach(group => {
+    // Finde alle .reveal Elemente in der Gruppe
+    const children = qsa('.reveal', group);
+    
+    children.forEach((child, index) => {
+      // Setzt die CSS-Variable --d (Delay) basierend auf dem Index
+      // 1. Element: 0ms, 2. Element: 120ms, 3. Element: 240ms usw.
+      child.style.setProperty('--d', `${index * 120}ms`);
+    });
+  });
 
 })();
