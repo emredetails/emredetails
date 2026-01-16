@@ -1241,3 +1241,42 @@ details[open] .faqSummary {
   -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%) !important;
   mask-image: linear-gradient(to bottom, transparent 0%, black 25%, black 75%, transparent 100%) !important;
 }
+/* =========================================
+   FINALE FIXES: Background & Leistungen
+   ========================================= */
+
+/* 1. Global Background: Fest & Nahtlos (Keine Kanten/Balken) */
+body {
+  background-attachment: fixed !important; /* Hintergrund bleibt stehen */
+  background-repeat: no-repeat !important; /* Keine Wiederholung */
+  background-size: cover !important;       /* Füllt immer den Screen */
+}
+
+/* Falls der "Balken" von dem Overlay kam, setzen wir es sauberer */
+body::before {
+  /* Entfernt den linearen Verlauf in der Mitte, der wie ein Balken wirken kann */
+  background: 
+    radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(1200px 900px at 50% 110%, rgba(0,0,0,.62), transparent 58%) !important;
+}
+
+/* 2. Leistungen: Sehr weicher, langer Fade (Transparent -> Bild) */
+.fade-both::before {
+  /* 0% bis 30% ist Fade-In, 70% bis 100% ist Fade-Out -> Sehr weich */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%) !important;
+  
+  /* Sicherheitshalber Opacity fixieren, damit es sichtbar ist */
+  opacity: var(--bg-op, 0.4) !important; 
+}
+
+/* 3. Cards: Blur Effekt (Milchglas) */
+.card {
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  
+  /* Hintergrund etwas transparenter machen, damit der Blur wirkt */
+  background: 
+    radial-gradient(120% 120% at 18% 0%, rgba(255,255,255,.10), transparent 55%),
+    rgba(20, 30, 50, 0.4) !important; /* Leicht transparenter als vorher */
+}
