@@ -954,21 +954,6 @@ body::after{
   z-index: 1;
 }
 
-/* fade masks: image fades into transparency (not color) */
-.fade-both::before{
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 18%, black 82%, transparent 100%);
-}
-
-.fade-bottom::before{
-  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 0%, black 70%, transparent 100%);
-}
-
-.fade-top::before{
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 55%, black 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, black 55%, black 100%);
-}
 /* Glass: 6px blur */
 .glass6{
   background: rgba(255,255,255,0.06);
@@ -1308,7 +1293,50 @@ body::before {
   opacity: 1;
   transform: translate3d(0, 0, 0);
 }
+/* =========================================
+   FINALE FIXES: Background & Leistungen
+   ========================================= */
 
+/* 1. Global Background: Fest & Nahtlos */
+body {
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+body::before {
+  /* Entfernt harte Kanten im globalen Overlay */
+  background: 
+    radial-gradient(1200px 900px at 50% -10%, rgba(255,255,255,.08), transparent 55%),
+    radial-gradient(1200px 900px at 50% 110%, rgba(0,0,0,.62), transparent 58%) !important;
+}
+
+/* 2. Leistungen: Korrigierter Fade (Kein Balken, Transparent) */
+.fade-both::before {
+  /* WICHTIG: Transparenter Hintergrund erzwingen, damit nur das Bild maskiert wird */
+  background-color: transparent !important;
+  
+  /* Maske breiter ziehen (15% bis 85%), damit das Bild großflächig sichtbar ist */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 15%, black 85%, transparent 100%) !important;
+  
+  /* Zwingt die Maske auf 100% Größe des Elements */
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
+  
+  opacity: var(--bg-op, 0.4) !important; 
+}
+
+/* 3. Cards: Blur Effekt */
+.card {
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
+  background: 
+    radial-gradient(120% 120% at 18% 0%, rgba(255,255,255,.10), transparent 55%),
+    rgba(20, 30, 50, 0.4) !important;
+}
 /* Optional: Wenn Nutzer "Bewegung reduzieren" im OS eingestellt hat */
 @media (prefers-reduced-motion: reduce) {
   .reveal { transition: none; opacity: 1; transform: none; }
