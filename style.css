@@ -1272,8 +1272,8 @@ body::before {
 
 /* 3. Cards: Blur Effekt (Milchglas) */
 .card {
-  backdrop-filter: blur(6px) !important;
-  -webkit-backdrop-filter: blur(6px) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   
   /* Hintergrund etwas transparenter machen, damit der Blur wirkt */
   background: 
