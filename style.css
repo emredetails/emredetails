@@ -1234,7 +1234,7 @@ details[open] .faqSummary {
 /* Inhalte vertikal mittig */
 .topbar__inner { 
   padding: 12px 0; 
-  min-height: 64px; /* Stellt sicher, dass die Bar nicht zu flach ist */
+  min-height: 74px; /* Stellt sicher, dass die Bar nicht zu flach ist */
 }
 /* Stärkerer Fade (oben und unten transparent) */
 .fade-both::before {
