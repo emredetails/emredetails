@@ -1263,8 +1263,8 @@ body::before {
 /* 2. Leistungen: Sehr weicher, langer Fade (Transparent -> Bild) */
 .fade-both::before {
   /* 0% bis 30% ist Fade-In, 70% bis 100% ist Fade-Out -> Sehr weich */
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%) !important;
-  mask-image: linear-gradient(to bottom, transparent 0%, black 30%, black 70%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 60%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 40%, black 60%, transparent 100%) !important;
   
   /* Sicherheitshalber Opacity fixieren, damit es sichtbar ist */
   opacity: var(--bg-op, 0.4) !important; 
