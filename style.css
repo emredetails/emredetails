@@ -935,20 +935,6 @@ body::after{
   overflow: hidden;
 }
 
-.bgSection::before{
-  content:"";
-  position:absolute; inset:0;
-  background-image: var(--bg-img);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  opacity: .15;
-  pointer-events:none;
-  z-index: 0;
-  transform: translate3d(0, var(--p, 0px), 0) scale(1.06);
-  will-change: transform;
-}
-
 .bgSection > *{
   position: relative;
   z-index: 1;
@@ -1350,4 +1336,48 @@ body::before {
 /* Optional: Wenn Nutzer "Bewegung reduzieren" im OS eingestellt hat */
 @media (prefers-reduced-motion: reduce) {
   .reveal { transition: none; opacity: 1; transform: none; }
+}
+
+/* =========================================
+   FIX: Background Image & Maske (Final & Clean)
+   ========================================= */
+
+/* 1. Basis-Einstellungen für Bild-Overlay */
+.bgSection::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  
+  /* Bild laden via Variable */
+  background-image: var(--bg-img);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  
+  /* WICHTIG: Standard auf 0.15 (15%) setzen, damit es dezent ist! */
+  opacity: var(--bg-op, 0.15) !important; 
+  
+  /* Transparenz erzwingen */
+  background-color: transparent !important;
+  
+  /* Layering */
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 2. Maske */
+.fade-both::before {
+  /* Verlauf: 
+     0% - 20%: Transparent zu Sichtbar (Fade In)
+     20% - 80%: Voll sichtbar
+     80% - 100%: Sichtbar zu Transparent (Fade Out)
+  */
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%) !important;
+  mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%) !important;
+  
+  /* Maske zwingend auf 100% Größe */
+  -webkit-mask-size: 100% 100% !important;
+  mask-size: 100% 100% !important;
+  -webkit-mask-repeat: no-repeat !important;
+  mask-repeat: no-repeat !important;
 }
