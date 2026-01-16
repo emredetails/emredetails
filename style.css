@@ -1223,21 +1223,3 @@ details[open] .faqSummary {
   padding: 12px 0; 
   min-height: 64px; /* Stellt sicher, dass die Bar nicht zu flach ist */
 }
-/* =========================================
-   Hintergrund komplett entfernen (Transparent)
-   ========================================= */
-
-.bgSection {
-  background: transparent !important;       /* Keine Farbe */
-  background-image: none !important;        /* Kein Bild */
-  box-shadow: none !important;              /* Kein Schatten */
-  border: none !important;                  /* Kein Rand */
-}
-
-/* Entfernt eventuelle Overlay-Effekte (Glow/Fade) */
-.bgSection::before, 
-.bgSection::after {
-  display: none !important;
-  opacity: 0 !important;
-  content: none !important;
-}
