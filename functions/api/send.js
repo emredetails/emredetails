@@ -23,6 +23,10 @@ export async function onRequestPost({ request, env }) {
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><b>${email}</b></td>
               </tr>
               <tr>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">Telefon:</td>
+                <td style="padding: 8px 0; border-bottom: 1px solid #eee;"><b><a href="tel:${telefon}" style="color:#0B1221; text-decoration:none;">${telefon || '-'}</a></b></td>
+              </tr>
+              <tr>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee; color: #666;">Fahrzeug:</td>
                 <td style="padding: 8px 0; border-bottom: 1px solid #eee;">${vehicle || '-'}</td>
               </tr>
