@@ -39,13 +39,37 @@
 <body>
   <header class="topbar">
     <div class="container topbar__inner">
-      <a class="brand" href="./index.html"><img class="brand__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="Logo"></a>
+      <a class="brand" href="./index.html">
+        <img class="brand__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="Logo">
+      </a>
+      
       <nav class="nav">
         <a class="nav__link" href="./index.html">Home</a>
         <a class="nav__link" href="./leistungen.html">Leistungen</a>
         <a class="nav__link" href="./kontakt.html">Kontakt</a>
       </nav>
-      <div class="topbar__actions"><a class="pill pill--primary" href="https://wa.me/4915755821180"><img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp</a></div>
+
+      <div class="topbar__actions">
+        <a class="pill pill--primary" href="https://wa.me/4915755821180">
+          <img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp
+        </a>
+        <button class="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobileNav">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobileNav" id="mobileNav" hidden>
+      <div class="container mobileNav__inner">
+        <a class="mobileNav__link" href="./index.html">Home</a>
+        <a class="mobileNav__link" href="./leistungen.html">Leistungen</a>
+        <a class="mobileNav__link" href="./kontakt.html">Kontakt</a>
+        <div class="mobileNav__cta">
+          <a class="pill pill--primary pill--full" href="https://wa.me/491714745229" target="_blank" rel="noreferrer">
+            <img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp Anfrage
+          </a>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -60,14 +84,14 @@
             <p class="sub reveal">Du hast Fragen zu einer Aufbereitung oder möchtest direkt einen Termin? Schreib mir.</p>
             
             <div class="contact__meta reveal" style="margin-top:30px;">
-              <a href="https://wa.me/491714745229" class="metaLine glass6" style="text-decoration:none; margin-bottom:10px;">
+              <a href="https://wa.me/4915755821180" class="metaLine glass6" style="text-decoration:none; margin-bottom:10px;">
                   <span class="metaLine__k">WhatsApp</span>
                   <span class="metaLine__v">Chat starten →</span>
               </a>
 
               <a href="tel:+4915755821180" class="metaLine glass6" style="text-decoration:none; margin-bottom:10px;">
                   <span class="metaLine__k">Telefon</span>
-                  <span class="metaLine__v">+49 171 4745229</span>
+                  <span class="metaLine__v">Anrufen: 01575 5821180</span>
               </a>
 
               <a href="mailto:info@emredetails.de" class="metaLine glass6" style="text-decoration:none;">
@@ -135,16 +159,15 @@
         </div>
         <div class="footer__right">
           <div class="footer__legal">
-            <a class="footer__link" href="./impressum.html" role="listitem">Impressum</a>
-            <a class="footer__link" href="./agb.html" role="listitem">AGB</a>
-            <a class="footer__link" href="./datenschutz.html" role="listitem">Datenschutz</a>
+             <a class="footer__link" href="./impressum.html">Impressum</a>
+             <a class="footer__link" href="./datenschutz.html">Datenschutz</a>
           </div>
           <div class="footer__copy">© <span id="year"></span> EmreDetails</div>
         </div>
       </div>
     </footer>
 
-    <a class="fab" href="https://wa.me/491714745229"><img class="fab__img" src="./whatsapp.png"><span class="fab__text">WhatsApp</span></a>
+    <a class="fab" href="https://wa.me/4915755821180"><img class="fab__img" src="./whatsapp.png"><span class="fab__text">WhatsApp</span></a>
 
   </main>
   
