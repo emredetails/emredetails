@@ -580,14 +580,21 @@ function renderField(field, parent) {
             labelText = labelText.toUpperCase().replace(/_/g, ' ');
         }
         
-        // 2. SPEZIFISCHE GLOBALE LABELS (Hier fixen wir Telefon/Email)
-        if(field.key.includes('global_telefon_link')) labelText = 'TELEFON (LINK / ANRUF)';
-        else if(field.key.includes('global_telefon_text')) labelText = 'TELEFON (ANZEIGETEXT)';
-        else if(field.key.includes('global_email_link')) labelText = 'EMAIL (MAILTO LINK)';
-        else if(field.key.includes('global_email_text')) labelText = 'EMAIL (ANZEIGETEXT)';
+        // 2. SPEZIFISCHE GLOBALE LABELS (Klartext)
+        if(field.key.includes('global_telefon_link')) labelText = 'TELEFONNUMMER (WIRD GEWÄHLT)';
+        else if(field.key.includes('global_telefon_text')) labelText = 'TELEFON (ANZEIGE AUF WEBSITE)';
+        
+        else if(field.key.includes('global_email_link')) labelText = 'EMAIL ADRESSE (EMPFÄNGER)';
+        else if(field.key.includes('global_email_text')) labelText = 'EMAIL (ANZEIGE AUF WEBSITE)';
+        
         else if(field.key.includes('global_adresse')) labelText = 'ADRESSE';
-        else if(field.key.includes('global_footer_claim')) labelText = 'FOOTER SLOGAN';
+        else if(field.key.includes('global_footer_claim')) labelText = 'FOOTER TEXT (UNTEN)';
         else if(field.key.includes('global_logo')) labelText = 'FIRMENLOGO';
+        
+        else if(field.key.includes('global_whatsapp')) labelText = 'WHATSAPP LINK';
+        else if(field.key.includes('global_insta')) labelText = 'INSTAGRAM LINK';
+        else if(field.key.includes('global_tiktok')) labelText = 'TIKTOK LINK';
+        else if(field.key.includes('global_youtube')) labelText = 'YOUTUBE LINK';
         
         // 3. Generische Labels (nur wenn oben nichts gegriffen hat)
         else if(field.key.includes('bg')) labelText = 'HINTERGRUND BILD';
