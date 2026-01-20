@@ -1,242 +1,464 @@
 <!doctype html>
+
 <html lang="de">
+
 <head>
+
   <meta charset="utf-8" />
+
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+
   <meta name="theme-color" content="#020408" />
+
   <title>Preise & Pakete – Detailing, Keramik & Pflege | EmreDetails</title>
+
   <meta name="description" content="Transparente Preise für Fahrzeugaufbereitung in Marl. Komplettpakete ab 300€, Keramikversiegelung, Lackpolitur und Einzelleistungen individuell buchbar." />
 
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
+
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="./style.css" />
+
   
+
   <style>
+
     /* Zusätzliche Styles für die Einzelleistungen-Liste */
+
     .service-grid {
+
       display: grid;
+
       grid-template-columns: 1fr;
+
       gap: 12px;
+
       margin-top: 30px;
+
     }
+
     @media (min-width: 768px) {
+
       .service-grid {
+
         grid-template-columns: 1fr 1fr;
+
         gap: 18px;
+
       }
+
     }
+
     /* Kategorie-Überschrift in der Liste */
+
     .service-category {
+
       grid-column: 1 / -1;
+
       margin-top: 20px;
+
       margin-bottom: 8px;
+
       font-size: 14px;
+
       text-transform: uppercase;
+
       letter-spacing: 1px;
+
       color: var(--muted);
+
       font-weight: 600;
+
     }
+
     .service-category:first-child { margin-top: 0; }
+
   </style>
+
 </head>
 
+
 <body>
+
   <header class="topbar" data-elevate>
+
     <div class="container topbar__inner">
+
       <a class="brand" href="./index.html">
+
         <img class="brand__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="EmreDetails" loading="eager">
+
       </a>
+
       <nav class="nav">
+
         <a class="nav__link" href="./index.html">Home</a>
+
         <a class="nav__link" href="./leistungen.html">Leistungen</a>
+
         <a class="nav__link" href="./kontakt.html">Kontakt</a>
+
       </nav>
+
       <div class="topbar__actions">
-        <a class="pill pill--primary" href="https://wa.me/491714745229" data-edit="global_whatsapp_link"><img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp</a>
+
+        <a class="pill pill--primary" href="https://wa.me/491714745229"><img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp</a>
+
         <button class="burger" aria-label="Menü"><span></span><span></span></button>
+
       </div>
+
     </div>
+
     <div class="mobileNav" id="mobileNav" hidden>
+
        <div class="container mobileNav__inner">
+
         <a class="mobileNav__link" href="./index.html">Home</a>
+
         <a class="mobileNav__link" href="./leistungen.html">Leistungen</a>
+
         <a class="mobileNav__link" href="./kontakt.html">Kontakt</a>
+
       </div>
+
     </div>
+
   </header>
 
+
   <main id="content">
+
     
+
     <section class="hero bgSection fade-bottom">
+
       <div class="container" style="text-align:center; max-width:800px; margin: 0 auto;">
-         <h1 class="h1 reveal" data-edit="leistungen_hero_headline">Unsere Pakete</h1>
-         <p class="lead reveal" style="margin-inline: auto;" data-edit="leistungen_hero_text">Von der soliden Grundpflege bis zur High-End Veredelung. <br>Transparent kalkuliert, professionell umgesetzt.</p>
+
+         <h1 class="h1 reveal">Unsere Pakete</h1>
+
+         <p class="lead reveal" style="margin-inline: auto;">Von der soliden Grundpflege bis zur High-End Veredelung. <br>Transparent kalkuliert, professionell umgesetzt.</p>
+
       </div>
+
     </section>
+
 
     <section class="section">
+
       <div class="container">
+
         
+
         <div class="cards">
+
           <article class="glassCard reveal" data-tilt style="display:flex; flex-direction:column;">
+
              <div class="glassCard__top">
-               <span class="badge" data-edit="paket_1_badge">Basic</span>
-               <h2 class="h3" data-edit="paket_1_titel">Refresh Paket</h2>
+
+               <span class="badge">Basic</span>
+
+               <h2 class="h3">Refresh Paket</h2>
+
              </div>
+
              <div class="glassCard__grid" style="grid-template-columns: 1fr;">
-                <p class="p" data-edit="paket_1_desc">Der perfekte Einstieg für ein gepflegtes Erscheinungsbild. Ideal für den Verkauf oder die jährliche Auffrischung.</p>
+
+                <p class="p">Der perfekte Einstieg für ein gepflegtes Erscheinungsbild. Ideal für den Verkauf oder die jährliche Auffrischung.</p>
+
                 <ul class="list">
-                  <li data-edit="paket_1_li_1"><strong>Außen:</strong> Schonende Handwäsche & Felgenreinigung</li>
-                  <li data-edit="paket_1_li_2"><strong>Lack:</strong> One-Step Hochglanzpolitur (entfernt Grauschleier & leichte Swirls)</li>
-                  <li data-edit="paket_1_li_3"><strong>Innen:</strong> Gründliches Saugen, Staubwischen & Scheibenreinigung</li>
-                  <li data-edit="paket_1_li_4">Inkl. Kunststoffpflege außen</li>
+
+                  <li><strong>Außen:</strong> Schonende Handwäsche & Felgenreinigung</li>
+
+                  <li><strong>Lack:</strong> One-Step Hochglanzpolitur (entfernt Grauschleier & leichte Swirls)</li>
+
+                  <li><strong>Innen:</strong> Gründliches Saugen, Staubwischen & Scheibenreinigung</li>
+
+                  <li>Inkl. Kunststoffpflege außen</li>
+
                 </ul>
-                <div style="margin-top:24px; font-size:26px; font-weight:600; color:var(--text);" data-edit="paket_1_preis">ab 300 €</div>
+
+                <div style="margin-top:24px; font-size:26px; font-weight:600; color:var(--text);">ab 300 €</div>
+
              </div>
+
              <div class="glassCard__bottom" style="margin-top:auto;">
+
                 <a class="pill pill--ghost pill--full" href="./kontakt.html">Termin anfragen</a>
+
              </div>
+
           </article>
+
 
           <article class="glassCard reveal" data-tilt style="display:flex; flex-direction:column; border-color:rgba(100,140,255,0.3);">
+
              <div class="glassCard__top">
-               <span class="badge" style="background:rgba(100,140,255,0.2); color:#fff;" data-edit="paket_2_badge">Bestseller</span>
-               <h2 class="h3" data-edit="paket_2_titel">Intensiv Pflege</h2>
+
+               <span class="badge" style="background:rgba(100,140,255,0.2); color:#fff;">Bestseller</span>
+
+               <h2 class="h3">Intensiv Pflege</h2>
+
              </div>
+
              <div class="glassCard__grid" style="grid-template-columns: 1fr;">
-                <p class="p" data-edit="paket_2_desc">Tiefgehende Reinheit und Schutz. Das Rundum-Sorglos-Paket für Liebhaberfahrzeuge und Leasingrückläufer.</p>
+
+                <p class="p">Tiefgehende Reinheit und Schutz. Das Rundum-Sorglos-Paket für Liebhaberfahrzeuge und Leasingrückläufer.</p>
+
                 <ul class="list">
-                  <li data-edit="paket_2_li_1"><strong>Lack:</strong> One-Step Politur + Hochwertige <strong>Wachsversiegelung</strong></li>
-                  <li data-edit="paket_2_li_2"><strong>Innen Intensiv:</strong> Tiefenreinigung Polster/Leder, Cockpitpflege & Shampoonierung</li>
-                  <li data-edit="paket_2_li_3">Detaillierte Felgen- & Radkastenreinigung</li>
-                  <li data-edit="paket_2_li_4">Entfernung von Flugrost & Teer</li>
+
+                  <li><strong>Lack:</strong> One-Step Politur + Hochwertige <strong>Wachsversiegelung</strong></li>
+
+                  <li><strong>Innen Intensiv:</strong> Tiefenreinigung Polster/Leder, Cockpitpflege & Shampoonierung</li>
+
+                  <li>Detaillierte Felgen- & Radkastenreinigung</li>
+
+                  <li>Entfernung von Flugrost & Teer</li>
+
                 </ul>
-                <div style="margin-top:24px; font-size:26px; font-weight:600; color:var(--text);" data-edit="paket_2_preis">ab 500 €</div>
+
+                <div style="margin-top:24px; font-size:26px; font-weight:600; color:var(--text);">ab 500 €</div>
+
              </div>
+
              <div class="glassCard__bottom" style="margin-top:auto;">
+
                 <a class="pill pill--primary pill--full" href="./kontakt.html">Termin anfragen</a>
+
              </div>
+
           </article>
+
 
           <article class="glassCard reveal" data-tilt style="display:flex; flex-direction:column; border-color:var(--accent);">
+
              <div class="glassCard__top">
-               <span class="badge" style="background:var(--accent); color:#fff; border:none;" data-edit="paket_3_badge">Signature</span>
-               <h2 class="h3" data-edit="paket_3_titel">High-End & Keramik</h2>
+
+               <span class="badge" style="background:var(--accent); color:#fff; border:none;">Signature</span>
+
+               <h2 class="h3">High-End & Keramik</h2>
+
              </div>
+
              <div class="glassCard__grid" style="grid-template-columns: 1fr;">
-                <p class="p" data-edit="paket_3_desc">Das Maximum an Glanz und Werterhalt. Perfektion bis ins letzte Detail mit Langzeitschutz.</p>
+
+                <p class="p">Das Maximum an Glanz und Werterhalt. Perfektion bis ins letzte Detail mit Langzeitschutz.</p>
+
                 <ul class="list">
-                  <li data-edit="paket_3_li_1"><strong>Lackkorrektur:</strong> Mehrstufige Politur (Entfernung von Kratzern/Defekten)</li>
-                  <li data-edit="paket_3_li_2"><strong>Schutz:</strong> Professionelle <strong>Keramikversiegelung</strong> (Standzeit & Härte)</li>
-                  <li data-edit="paket_3_li_3"><strong>Innen:</strong> Komplette Intensiv-Aufbereitung inkl. aller Details</li>
-                  <li data-edit="paket_3_li_4">Motorraumreinigung (auf Wunsch)</li>
+
+                  <li><strong>Lackkorrektur:</strong> Mehrstufige Politur (Entfernung von Kratzern/Defekten)</li>
+
+                  <li><strong>Schutz:</strong> Professionelle <strong>Keramikversiegelung</strong> (Standzeit & Härte)</li>
+
+                  <li><strong>Innen:</strong> Komplette Intensiv-Aufbereitung inkl. aller Details</li>
+
+                  <li>Motorraumreinigung (auf Wunsch)</li>
+
                 </ul>
-                <div style="margin-top:24px; font-size:26px; font-weight:600; color:var(--text);" data-edit="paket_3_preis">ab 1.000 €</div>
+
+                <div style="margin-top:24px; font-size:26px; font-weight:600; color:var(--text);">ab 1.000 €</div>
+
              </div>
+
              <div class="glassCard__bottom" style="margin-top:auto;">
+
                 <a class="pill pill--ghost pill--full" href="./kontakt.html">Beratung & Termin</a>
+
              </div>
+
           </article>
+
         </div>
 
+
       </div>
+
     </section>
+
 
     <section class="section section--soft">
+
       <div class="container">
+
         <div class="sectionHead reveal">
-          <h2 class="h2" data-edit="services_liste_headline">Einzelleistungen & Add-ons</h2>
-          <p class="sub" data-edit="services_liste_sub">Stelle dir dein Wunschprogramm individuell zusammen oder buche gezielt einzelne Services.</p>
+
+          <h2 class="h2">Einzelleistungen & Add-ons</h2>
+
+          <p class="sub">Stelle dir dein Wunschprogramm individuell zusammen oder buche gezielt einzelne Services.</p>
+
         </div>
+
 
         <div class="service-grid reveal">
+
           
-          <div class="service-category" data-edit="cat_1_title">Basics & Reinigung</div>
+
+          <div class="service-category">Basics & Reinigung</div>
+
           
-          <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_1_name">Handwäsche</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_1_price">ab 60 €</span>
-          </div>
-          <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_2_name">Motorwäsche</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_2_price">ab 40 €</span>
-          </div>
-
-          <div class="service-category" data-edit="cat_2_title">Lack & Politur</div>
 
           <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_3_name">One-Step Politur</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_3_price">ab 200 €</span>
-          </div>
-          <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_4_name">2-Stufige Politur (Defektkorrektur)</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_4_price">ab 400 €</span>
-          </div>
-          <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_5_name">Mehrstufige Politur</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_5_price">ab 700 €</span>
+
+            <span class="metaLine__v">Handwäsche</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 60 €</span>
+
           </div>
 
-          <div class="service-category" data-edit="cat_3_title">Schutz & Versiegelung</div>
+          <div class="metaLine glass6">
 
-          <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_6_name">Wachsversiegelung</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_6_price">ab 100 €</span>
-          </div>
-          <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_7_name">Keramikversiegelung Karosserie</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_7_price">ab 600 €</span>
-          </div>
-          <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_8_name">Keramikversiegelung Felgen</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_8_price">ab 300 €</span>
-          </div>
-          <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_9_name">Scheibenversiegelung</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_9_price">ab 80 €</span>
+            <span class="metaLine__v">Motorwäsche</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 40 €</span>
+
           </div>
 
-          <div class="service-category" data-edit="cat_4_title">Innenraum & Spezial</div>
+
+          <div class="service-category">Lack & Politur</div>
+
 
           <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_10_name">Intensive Innenraumaufbereitung</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_10_price">ab 200 €</span>
+
+            <span class="metaLine__v">One-Step Politur</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 200 €</span>
+
           </div>
+
           <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_11_name">Lederreinigung & Versiegelung</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_11_price">ab 250 €</span>
+
+            <span class="metaLine__v">2-Stufige Politur (Defektkorrektur)</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 400 €</span>
+
           </div>
+
           <div class="metaLine glass6">
-            <span class="metaLine__v" data-edit="svc_12_name">Textilreinigung und Versiegelung</span>
-            <span class="metaLine__k" style="color:var(--accent);" data-edit="svc_12_price">ab 150 €</span>
+
+            <span class="metaLine__v">Mehrstufige Politur</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 700 €</span>
+
           </div>
+
+
+          <div class="service-category">Schutz & Versiegelung</div>
+
+
+          <div class="metaLine glass6">
+
+            <span class="metaLine__v">Wachsversiegelung</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 100 €</span>
+
+          </div>
+
+          <div class="metaLine glass6">
+
+            <span class="metaLine__v">Keramikversiegelung Karosserie</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 600 €</span>
+
+          </div>
+
+          <div class="metaLine glass6">
+
+            <span class="metaLine__v">Keramikversiegelung Felgen</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 300 €</span>
+
+          </div>
+
+          <div class="metaLine glass6">
+
+            <span class="metaLine__v">Scheibenversiegelung</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 80 €</span>
+
+          </div>
+
+
+          <div class="service-category">Innenraum & Spezial</div>
+
+
+          <div class="metaLine glass6">
+
+            <span class="metaLine__v">Intensive Innenraumaufbereitung</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 200 €</span>
+
+          </div>
+
+          <div class="metaLine glass6">
+
+            <span class="metaLine__v">Lederreinigung & Versiegelung</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 250 €</span>
+
+          </div>
+
+          <div class="metaLine glass6">
+
+            <span class="metaLine__v">Textilreinigung und Versiegelung</span>
+
+            <span class="metaLine__k" style="color:var(--accent);">ab 150 €</span>
+
+          </div>
+
 
         </div>
+
       </div>
+
     </section>
 
+
     <footer class="footer">
+
       <div class="container footer__inner">
+
         <div class="footer__left">
+
           <div class="footer__brand">
+
              <img class="footer__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="EmreDetails">
+
           </div>
-          <div class="footer__sub" data-edit="global_footer_claim">Fahrzeugaufbereitung Marl.</div>
+
+          <div class="footer__sub">Fahrzeugaufbereitung Marl.</div>
+
         </div>
+
         <div class="footer__right">
+
           <div class="footer__legal">
+
             <a class="footer__link" href="./impressum.html" role="listitem">Impressum</a>
+
             <a class="footer__link" href="./agb.html" role="listitem">AGB</a>
+
             <a class="footer__link" href="./datenschutz.html" role="listitem">Datenschutz</a>
+
           </div>
+
           <div class="footer__copy">© <span id="year"></span> EmreDetails</div>
+
         </div>
+
       </div>
+
     </footer>
-    <a class="fab" href="https://wa.me/491714745229" data-edit="global_whatsapp_link"><img class="fab__img" src="./whatsapp.png"><span class="fab__text">WhatsApp</span></a>
+
+    <a class="fab" href="https://wa.me/491714745229"><img class="fab__img" src="./whatsapp.png"><span class="fab__text">WhatsApp</span></a>
+
   </main>
+
   <script src="./main.js" defer></script>
-  <script src="/js/cms.js"></script>
+
 </body>
-</html>
+
+</html> 
