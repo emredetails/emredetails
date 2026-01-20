@@ -59,15 +59,27 @@
         .cms-field-wrap { position: relative; }
         .cms-label-small { display: block; font-size: 11px; color: #666; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
         
-        .cms-input, .cms-textarea {
+        .cms-input {
             width: 100%; background: #0a0a0a; border: 1px solid #333;
             color: #ddd; padding: 12px 14px; border-radius: 8px;
-            font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s, background 0.2s;
+            font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s;
         }
-        .cms-input:focus, .cms-textarea:focus { border-color: #555; background: #000; }
-        .cms-textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
+        .cms-input:focus { border-color: #555; background: #000; }
 
-        /* Toolbar (Hidden by default) */
+        /* --- VISUAL EDITOR (WYSIWYG) --- */
+        .cms-editor {
+            width: 100%; min-height: 100px; background: #0a0a0a; border: 1px solid #333;
+            color: #ddd; padding: 14px; border-radius: 8px;
+            font-family: inherit; font-size: 14px; line-height: 1.6;
+            outline: none; overflow-y: auto;
+        }
+        .cms-editor:focus { border-color: #555; background: #000; }
+        /* Style im Editor */
+        .cms-editor b, .cms-editor strong { color: #fff; font-weight: 700; }
+        .cms-editor i, .cms-editor em { font-style: italic; color: #bbb; }
+        .cms-editor u { text-decoration: underline; text-decoration-color: #555; }
+
+        /* Toolbar */
         .format-toolbar {
             display: flex; gap: 4px; position: absolute; top: -35px; right: 0;
             background: #222; padding: 4px; border-radius: 6px; border: 1px solid #333;
@@ -78,28 +90,24 @@
         
         .format-btn {
             background: transparent; border: none; color: #aaa;
-            width: 24px; height: 24px; border-radius: 4px; cursor: pointer;
-            font-family: serif; font-size: 14px; display: grid; place-items: center;
+            width: 28px; height: 28px; border-radius: 4px; cursor: pointer;
+            font-family: serif; font-size: 15px; display: grid; place-items: center;
         }
         .format-btn:hover { background: #333; color: #fff; }
+        .format-btn.active { background: #444; color: #fff; }
 
         /* Social Icons Input */
         .social-input-wrap { display: flex; align-items: center; background: #0a0a0a; border: 1px solid #333; border-radius: 8px; overflow: hidden; }
-        .social-icon-box { width: 40px; height: 40px; display: grid; place-items: center; background: #151515; border-right: 1px solid #333; }
-        .social-icon-box img { width: 20px; height: 20px; object-fit: contain; opacity: 0.8; }
-        .social-input-wrap input { border: none; background: transparent; flex: 1; height: 40px; padding: 0 12px; color: #ddd; outline: none; }
+        .social-icon-box { width: 44px; height: 44px; display: grid; place-items: center; background: #151515; border-right: 1px solid #333; }
+        .social-icon-box img { width: 22px; height: 22px; object-fit: contain; }
+        .social-input-wrap input { border: none; background: transparent; flex: 1; height: 44px; padding: 0 14px; color: #ddd; outline: none; }
         .social-input-wrap:focus-within { border-color: #555; }
 
-        /* Login & Modal */
+        /* Modals & Utils */
         #login-overlay, #media-modal { background: rgba(0,0,0,0.95); }
         .hidden { display: none !important; }
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
         
         /* Undo/Redo Buttons */
         .history-btn {
@@ -188,17 +196,14 @@
         
         const API = '/api/admin';
         
-        // --- HISTORY SYSTEM (Undo/Redo) ---
+        // --- HISTORY SYSTEM ---
         let history = [];
         let historyIndex = -1;
-        let isInternalUpdate = false; // Verhindert History-Eintrag bei Undo
+        let isInternalUpdate = false; 
 
         function addToHistory(newState) {
             if(isInternalUpdate) return;
-            // Wenn wir in der Vergangenheit waren und was ändern, Zukunft abschneiden
-            if(historyIndex < history.length - 1) {
-                history = history.slice(0, historyIndex + 1);
-            }
+            if(historyIndex < history.length - 1) history = history.slice(0, historyIndex + 1);
             history.push(JSON.parse(JSON.stringify(newState)));
             historyIndex++;
             updateHistoryBtns();
@@ -207,34 +212,32 @@
         function undo() {
             if(historyIndex > 0) {
                 historyIndex--;
-                isInternalUpdate = true;
-                contentData = JSON.parse(JSON.stringify(history[historyIndex]));
-                // UI neu laden
-                const activeNav = document.querySelector('.nav-item.active');
-                if(activeNav) activeNav.click(); // Hacky refresh
-                isInternalUpdate = false;
-                updateHistoryBtns();
+                restoreHistory();
             }
         }
-
         function redo() {
             if(historyIndex < history.length - 1) {
                 historyIndex++;
-                isInternalUpdate = true;
-                contentData = JSON.parse(JSON.stringify(history[historyIndex]));
-                const activeNav = document.querySelector('.nav-item.active');
-                if(activeNav) activeNav.click();
-                isInternalUpdate = false;
-                updateHistoryBtns();
+                restoreHistory();
             }
         }
-
+        function restoreHistory() {
+            isInternalUpdate = true;
+            contentData = JSON.parse(JSON.stringify(history[historyIndex]));
+            
+            // Aktuelle Seite neu rendern, um Werte zu updaten
+            const activeNav = document.querySelector('.nav-item.active');
+            if(activeNav) activeNav.click(); 
+            
+            isInternalUpdate = false;
+            updateHistoryBtns();
+        }
         function updateHistoryBtns() {
             document.getElementById('btn-undo').disabled = historyIndex <= 0;
             document.getElementById('btn-redo').disabled = historyIndex >= history.length - 1;
         }
 
-        // --- GLOBAL VARS ---
+        // --- VARS ---
         let contentData = {};
         let scannedFields = {}; 
         let globalFields = []; 
@@ -253,9 +256,8 @@
             const btn = document.getElementById('login-btn');
             const pwd = document.getElementById('password-input').value;
             const old = btn.innerText; btn.innerText="...";
-            
             try {
-                const res = await fetch(`${API}?action=login`, { method:'POST', body:JSON.stringify({password: pwd, email:'admin'}) }); // Email dummy
+                const res = await fetch(`${API}?action=login`, { method:'POST', body:JSON.stringify({password: pwd, email:'admin'}) });
                 const data = await res.json();
                 if(res.ok && data.success) { localStorage.setItem('token', data.token); checkAuth(); }
                 else { document.getElementById('login-error').innerText = "Falsches Passwort"; btn.innerText=old; }
@@ -271,9 +273,7 @@
             } catch(e) { contentData = {}; }
             
             await scanPages();
-            
-            // Init History mit Startzustand
-            addToHistory(contentData);
+            addToHistory(contentData); // Init History
             
             // Shortcuts
             document.addEventListener('keydown', (e) => {
@@ -313,8 +313,7 @@
                             if(match) defaultVal = match[1];
                         } else if(el.tagName === 'A') {
                             type = 'text'; defaultVal = el.getAttribute('href'); 
-                            
-                            // Spezielle Logik für Social Links: Icon erkennen
+                            // Social Recognition
                             if(key.includes('whatsapp') || key.includes('insta') || key.includes('youtube') || key.includes('tiktok')) {
                                 type = 'social';
                             }
@@ -365,7 +364,6 @@
             renderGroups(fieldsToShow, container);
         }
 
-        // === RENDERER ===
         function renderGroups(fields, container) {
             if(!fields || fields.length === 0) {
                 container.innerHTML = '<div style="color:#444; text-align:center; padding-top:40px;">Nichts zu bearbeiten.</div>';
@@ -383,9 +381,7 @@
                     if(parts[0] === 'svc' && !isNaN(parts[1])) groupKey = `service_${parts[1]}`;
                     if(!groups[groupKey]) groups[groupKey] = [];
                     groups[groupKey].push(f);
-                } else {
-                    misc.push(f);
-                }
+                } else { misc.push(f); }
             });
 
             for (const [gKey, gFields] of Object.entries(groups)) {
@@ -402,7 +398,6 @@
                     container.appendChild(card);
                 }
             }
-
             if(misc.length > 0) {
                 const card = document.createElement('div');
                 card.className = 'cms-card';
@@ -419,7 +414,6 @@
             let val = contentData[field.key];
             if(val === undefined || val === null) val = field.defaultVal || '';
 
-            // Clean Labels
             let labelText = field.key.toUpperCase().replace(/_/g, ' ');
             const parts = field.key.split('_');
             if(parts.length > 2) labelText = parts.slice(2).join(' ').toUpperCase();
@@ -438,7 +432,6 @@
                 if(field.key.includes('youtube')) iconSrc = '../youtube.png';
                 if(field.key.includes('tiktok')) iconSrc = '../tiktok.png';
                 
-                // Fallback, falls Icon fehlt: Einfaches Input
                 html += `
                     <div class="social-input-wrap">
                         <div class="social-icon-box"><img src="${iconSrc}" onerror="this.style.display='none'"></div>
@@ -446,15 +439,15 @@
                     </div>
                 `;
             } 
-            // -- TEXTAREA + TOGGLE FORMAT --
+            // -- WYSIWYG EDITOR --
             else if(field.type === 'textarea') {
                 html += `
                     <div class="format-toolbar">
-                        <button class="format-btn" onclick="toggleTag('strong', '${field.key}')" title="Fett"><b>B</b></button>
-                        <button class="format-btn" onclick="toggleTag('em', '${field.key}')" title="Kursiv"><i>I</i></button>
-                        <button class="format-btn" onclick="toggleTag('u', '${field.key}')" title="Unterstrichen"><u>U</u></button>
+                        <button class="format-btn" onmousedown="formatText('bold', event)" title="Fett"><b>B</b></button>
+                        <button class="format-btn" onmousedown="formatText('italic', event)" title="Kursiv"><i>I</i></button>
+                        <button class="format-btn" onmousedown="formatText('underline', event)" title="Unterstrichen"><u>U</u></button>
                     </div>
-                    <textarea id="input-${field.key}" oninput="updateVal('${field.key}', this.value)" class="cms-textarea">${val}</textarea>
+                    <div class="cms-editor" contenteditable="true" onblur="updateVal('${field.key}', this.innerHTML)">${val}</div>
                 `;
             } 
             // -- IMAGE --
@@ -468,8 +461,7 @@
                         <img src="${prevSrc}" id="preview-${field.key}" style="width:60px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #333; background:#000;">
                         <div style="flex:1; display:flex; gap:10px;">
                             <label class="pill pill--ghost" style="font-size:12px; padding:0 12px; height:36px; cursor:pointer;">
-                                Upload
-                                <input type="file" onchange="handleImage('${field.key}', this)" style="display:none;">
+                                Upload <input type="file" onchange="handleImage('${field.key}', this)" style="display:none;">
                             </label>
                             <button onclick="openLibrary('${field.key}')" class="pill pill--ghost" style="font-size:12px; padding:0 12px; height:36px;">Bibliothek</button>
                         </div>
@@ -478,7 +470,6 @@
             } else {
                 html += `<input type="text" value="${val.replace(/"/g, '&quot;')}" oninput="updateVal('${field.key}', this.value)" class="cms-input">`;
             }
-            
             wrap.innerHTML = html;
             parent.appendChild(wrap);
         }
@@ -487,53 +478,17 @@
         let debounceTimer;
         function updateVal(k, v) { 
             contentData[k] = v;
-            // Debounce History (damit nicht jeder Tastenschlag gespeichert wird)
             clearTimeout(debounceTimer);
             debounceTimer = setTimeout(() => addToHistory(contentData), 800);
         }
-        
-        // --- SMART TOGGLE FORMATTING ---
-        function toggleTag(tag, key) {
-            const el = document.getElementById(`input-${key}`);
-            const start = el.selectionStart;
-            const end = el.selectionEnd;
-            let text = el.value;
-            if(start === end) return; 
 
-            const selected = text.substring(start, end);
-            const openTag = `<${tag}>`;
-            const closeTag = `</${tag}>`;
-            
-            // Check if already wrapped
-            // Wir schauen etwas grob um die Selection herum
-            const before = text.substring(0, start);
-            const after = text.substring(end);
-            
-            // Simpler Toggle: Wenn der markierte Text exakt von Tags umschlossen ist (im Selection String)
-            // ODER wenn die Tags direkt davor/danach stehen.
-            
-            // Fall 1: User markiert <b>Text</b> komplett
-            if(selected.startsWith(openTag) && selected.endsWith(closeTag)) {
-                 const unwrapped = selected.substring(openTag.length, selected.length - closeTag.length);
-                 el.value = before + unwrapped + after;
-            } 
-            // Fall 2: User markiert "Text", aber davor steht <b> und danach </b>
-            else if(before.endsWith(openTag) && after.startsWith(closeTag)) {
-                const newBefore = before.substring(0, before.length - openTag.length);
-                const newAfter = after.substring(closeTag.length);
-                el.value = newBefore + selected + newAfter;
-            }
-            // Fall 3: Nicht gewrappt -> Wrappen
-            else {
-                el.value = before + openTag + selected + closeTag + after;
-            }
-
-            updateVal(key, el.value);
-            // Cursor Position fixen
-            // el.setSelectionRange(...) könnte man hier noch machen
+        // --- WYSIWYG EXEC ---
+        function formatText(cmd, e) {
+            e.preventDefault(); // Focus nicht verlieren
+            document.execCommand(cmd, false, null);
         }
 
-        // --- IMAGE LOGIC ---
+        // --- IMAGES ---
         function handleImage(k, inp) {
             const f = inp.files[0];
             if(!f || f.size > 15*1024*1024) return alert('Max 15MB');
@@ -547,13 +502,22 @@
             if(!src.startsWith('data:') && !src.startsWith('http') && !src.startsWith('/')) d = '../'+src.replace(/^\.\//,'');
             document.getElementById(`preview-${k}`).src = d;
         }
+        
+        // --- LIBRARY FIX ---
         function openLibrary(k) {
             currentImageKey = k;
             const grid = document.getElementById('media-grid');
             grid.innerHTML = '';
             const images = new Set();
-            [globalFields, ...Object.values(scannedFields)].flat().forEach(f => { if(f.type === 'image' && f.defaultVal) images.add(f.defaultVal); });
-            Object.values(contentData).forEach(v => { if(typeof v==='string' && v.startsWith('data:image')) images.add(v); });
+            
+            // 1. Repo Images
+            [globalFields, ...Object.values(scannedFields)].flat().forEach(f => { 
+                if(f.type === 'image' && f.defaultVal) images.add(f.defaultVal); 
+            });
+            // 2. Uploaded Images from DB
+            Object.values(contentData).forEach(v => { 
+                if(typeof v==='string' && v.startsWith('data:image')) images.add(v); 
+            });
             
             images.forEach(src => {
                 let d = src;
@@ -579,7 +543,7 @@
             });
             if(res.ok) { 
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> OK'; 
-                setTimeout(()=>btn.innerHTML=old, 1500); 
+                setTimeout(()=>btn.innerText=old, 1500); 
             } else { btn.innerText = 'Error'; }
         }
 
