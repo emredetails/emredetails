@@ -10,8 +10,28 @@
 
     <style>
         /* --- ADMIN OVERRIDES (Grau statt Blau) --- */
-        body { overflow: hidden; display: flex; height: 100vh; background: #050505; }
-        
+        body {
+            overflow: hidden; /* Scrollen nur im Main Bereich */
+            display: flex;
+            height: 100vh;
+        }
+
+        /* LOGIN SCREEN */
+        #login-overlay {
+            position: fixed; inset: 0; z-index: 9999;
+            background: var(--bg0);
+            display: grid; place-items: center;
+        }
+        .login-card {
+            width: 100%; max-width: 400px;
+            background: var(--card);
+            backdrop-filter: blur(var(--blur));
+            border: 1px solid var(--stroke);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            text-align: center;
+        }        
         aside {
             width: 280px; background: #0f0f0f; border-right: 1px solid #222;
             display: flex; flex-direction: column; flex-shrink: 0;
@@ -76,7 +96,7 @@
         .format-btn:hover { background: #333; color: #fff; }
         
         /* Modals & Utils */
-        #login-overlay, #media-modal { background: rgba(0,0,0,0.95); }
+        #media-modal { background: rgba(0,0,0,0.95); }
         .hidden { display: none !important; }
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
