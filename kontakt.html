@@ -50,7 +50,7 @@
       </nav>
 
       <div class="topbar__actions">
-        <a class="pill pill--primary" href="https://wa.me/491714745229">
+        <a class="pill pill--primary" href="https://wa.me/491714745229" data-edit="global_whatsapp_link">
           <img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp
         </a>
         <button class="burger" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobileNav">
@@ -65,7 +65,7 @@
         <a class="mobileNav__link" href="./leistungen.html">Leistungen</a>
         <a class="mobileNav__link" href="./kontakt.html">Kontakt</a>
         <div class="mobileNav__cta">
-          <a class="pill pill--primary pill--full" href="https://wa.me/491714745229" target="_blank" rel="noreferrer">
+          <a class="pill pill--primary pill--full" href="https://wa.me/491714745229" target="_blank" rel="noreferrer" data-edit="global_whatsapp_link">
             <img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp Anfrage
           </a>
         </div>
@@ -80,23 +80,23 @@
         <div class="contact">
           
           <div class="contact__left">
-            <h1 class="h2 reveal">Lass uns sprechen.</h1>
-            <p class="sub reveal">Du hast Fragen zu einer Aufbereitung oder möchtest direkt einen Termin? Schreib mir.</p>
+            <h1 class="h2 reveal" data-edit="kontakt_headline">Lass uns sprechen.</h1>
+            <p class="sub reveal" data-edit="kontakt_sub">Du hast Fragen zu einer Aufbereitung oder möchtest direkt einen Termin? Schreib mir.</p>
             
             <div class="contact__meta reveal" style="margin-top:30px;">
-              <a href="https://wa.me/491714745229" class="metaLine glass6" style="text-decoration:none; margin-bottom:10px;">
+              <a href="https://wa.me/491714745229" class="metaLine glass6" style="text-decoration:none; margin-bottom:10px;" data-edit="global_whatsapp_link">
                   <span class="metaLine__k">WhatsApp</span>
                   <span class="metaLine__v">Chat starten →</span>
               </a>
 
-              <a href="tel:+491714745229" class="metaLine glass6" style="text-decoration:none; margin-bottom:10px;">
+              <a href="tel:+491714745229" class="metaLine glass6" style="text-decoration:none; margin-bottom:10px;" data-edit="global_telefon_link">
                   <span class="metaLine__k">Telefon</span>
-                  <span class="metaLine__v">+49 171 4745229</span>
+                  <span class="metaLine__v" data-edit="global_telefon_text">+49 171 4745229</span>
               </a>
 
-              <a href="mailto:info@emredetails.de" class="metaLine glass6" style="text-decoration:none;">
+              <a href="mailto:info@emredetails.de" class="metaLine glass6" style="text-decoration:none;" data-edit="global_email_link">
                   <span class="metaLine__k">Email</span>
-                  <span class="metaLine__v">info@emredetails.de</span>
+                  <span class="metaLine__v" data-edit="global_email_text">info@emredetails.de</span>
               </a>
             </div>
           </div>
@@ -145,7 +145,7 @@
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7788.05213582847!2d7.159474398054758!3d51.67298426839177!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b8fbf51b050897%3A0xe081f8b5559b812e!2sEmreDetails!5e0!3m2!1sde!2sde!4v1768547069278!5m2!1sde!2sde" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
               </div>
               <div class="mapCard__bottom glass6">
-                <span class="muted">Adresse:</span> Benzstr. 15b, 45768 Marl
+                <span class="muted">Adresse:</span> <span data-edit="global_adresse">Benzstr. 15b, 45768 Marl</span>
               </div>
             </div>
         </div>
@@ -159,7 +159,7 @@
           <div class="footer__brand">
              <img class="footer__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="EmreDetails">
           </div>
-          <div class="footer__sub">Professionelle Fahrzeugaufbereitung in Marl. Keine Kompromisse bei Sauberkeit und Lackschutz.</div>
+          <div class="footer__sub" data-edit="global_footer_claim">Professionelle Fahrzeugaufbereitung in Marl. Keine Kompromisse bei Sauberkeit und Lackschutz.</div>
         </div>
         <div class="footer__right">
           <div class="footer__legal">
@@ -172,10 +172,11 @@
       </div>
     </footer>
 
-    <a class="fab" href="https://wa.me/4915755821180"><img class="fab__img" src="./whatsapp.png"><span class="fab__text">WhatsApp</span></a>
+    <a class="fab" href="https://wa.me/4915755821180" data-edit="global_whatsapp_link"><img class="fab__img" src="./whatsapp.png"><span class="fab__text">WhatsApp</span></a>
 
   </main>
   
   <script src="./main.js" defer></script>
+  <script src="/js/cms.js"></script>
 </body>
 </html>
