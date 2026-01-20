@@ -45,21 +45,24 @@
 
         .cms-card {
             background: #1a1a1a; border: 1px solid #2a2a2a;
-            border-radius: 12px; margin-bottom: 40px; /* ABSTAND VERGRÖSSERT */
-            overflow: hidden;
+            border-radius: 12px; margin-bottom: 30px; /* Mehr Abstand */
+            margin-top: 10px; /* Dein gewünschter Top Abstand */
+            overflow: visible; /* Wichtig für Toolbar */
             transition: border-color 0.2s;
         }
         .cms-card:hover { border-color: #333; }
         .cms-card-header {
             background: #222; padding: 12px 20px; border-bottom: 1px solid #2a2a2a;
             font-size: 12px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px;
+            border-radius: 12px 12px 0 0;
         }
-        .cms-card-body { padding: 20px; display: grid; gap: 24px; }
+        .cms-card-body { padding: 24px; display: grid; gap: 24px; }
 
         /* Inputs */
         .cms-field-wrap { position: relative; }
         .cms-label-small { display: block; font-size: 11px; color: #666; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
         
+        /* Standard Input (für Links) */
         .cms-input {
             width: 100%; background: #0a0a0a; border: 1px solid #333;
             color: #ddd; padding: 12px 14px; border-radius: 8px;
@@ -67,14 +70,17 @@
         }
         .cms-input:focus { border-color: #555; background: #000; }
 
-        /* --- VISUAL EDITOR (WYSIWYG) --- */
+        /* --- VISUAL EDITOR (WYSIWYG) - Jetzt für ALLE Texte --- */
         .cms-editor {
-            width: 100%; min-height: 80px; background: #0a0a0a; border: 1px solid #333;
-            color: #ddd; padding: 14px; border-radius: 8px;
-            font-family: inherit; font-size: 14px; line-height: 1.6;
+            width: 100%; min-height: 46px; /* Kompakt für Einzeiler */
+            background: #0a0a0a; border: 1px solid #333;
+            color: #ddd; padding: 12px 14px; border-radius: 8px;
+            font-family: inherit; font-size: 14px; line-height: 1.5;
             outline: none; overflow-y: auto; white-space: pre-wrap;
+            transition: all 0.2s;
         }
-        .cms-editor:focus { border-color: #555; background: #000; }
+        .cms-editor:focus { border-color: #555; background: #000; min-height: 80px; } /* Wächst bei Fokus */
+        
         /* Style im Editor */
         .cms-editor b, .cms-editor strong { color: #fff; font-weight: 700; }
         .cms-editor i, .cms-editor em { font-style: italic; color: #bbb; }
@@ -82,10 +88,10 @@
 
         /* Toolbar */
         .format-toolbar {
-            display: flex; gap: 4px; position: absolute; top: -35px; right: 0;
+            display: flex; gap: 4px; position: absolute; top: -38px; right: 0;
             background: #222; padding: 4px; border-radius: 6px; border: 1px solid #333;
             opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s;
-            transform: translateY(5px); z-index: 10;
+            transform: translateY(5px); z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
         .cms-field-wrap:focus-within .format-toolbar { opacity: 1; pointer-events: all; transform: translateY(0); }
         
@@ -196,6 +202,16 @@
         
         const API = '/api/admin';
         
+        // --- HELPERS: Cloudflare Email Decode ---
+        function cfDecode(email) {
+            let r = "";
+            let k = parseInt(email.substr(0, 2), 16);
+            for (let i = 2; i < email.length; i += 2) {
+                r += String.fromCharCode(parseInt(email.substr(i, 2), 16) ^ k);
+            }
+            return r;
+        }
+
         // --- HISTORY SYSTEM ---
         let history = [];
         let historyIndex = -1;
@@ -272,7 +288,6 @@
             await scanPages();
             addToHistory(contentData); // Init History
             
-            // Shortcuts
             document.addEventListener('keydown', (e) => {
                 if((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
                 if((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
@@ -302,6 +317,12 @@
                         let type = 'text';
                         let defaultVal = el.innerHTML.trim();
 
+                        // EMAIL DECODE (Fix für [email protected])
+                        const cfEmail = el.querySelector('.__cf_email__');
+                        if(cfEmail) {
+                            try { defaultVal = cfDecode(cfEmail.getAttribute('data-cfemail')); } catch(e){}
+                        }
+
                         if(el.tagName === 'IMG') {
                             type = 'image'; defaultVal = el.getAttribute('src');
                         } else if(el.getAttribute('data-type') === 'bg') {
@@ -309,16 +330,17 @@
                             const match = (el.getAttribute('style')||'').match(/url\(['"]?(.*?)['"]?\)/);
                             if(match) defaultVal = match[1];
                         } else if(el.tagName === 'A') {
-                            type = 'text'; defaultVal = el.getAttribute('href'); 
+                            // WICHTIG: Links bleiben "link", können nicht fett gemacht werden
+                            type = 'link'; 
+                            defaultVal = el.getAttribute('href'); 
+                            
+                            // Social Check
                             if(key.includes('whatsapp') || key.includes('insta') || key.includes('youtube') || key.includes('tiktok')) {
                                 type = 'social';
                             }
                         } else {
-                            // INTELLIGENTER SCANNER:
-                            // Wenn Text lang ist ODER HTML-Tags enthält (z.B. <strong>), erzwinge Editor
-                            if(el.tagName === 'TEXTAREA' || el.innerText.length > 50 || el.innerHTML.includes('<') && el.innerHTML.includes('>')) {
-                                type = 'textarea';
-                            }
+                            // ALLES andere ist jetzt "formatted_text" (also WYSIWYG)
+                            type = 'formatted_text';
                         }
 
                         const fieldObj = { key, type, defaultVal };
@@ -417,15 +439,22 @@
             let labelText = field.key.toUpperCase().replace(/_/g, ' ');
             const parts = field.key.split('_');
             if(parts.length > 2) labelText = parts.slice(2).join(' ').toUpperCase();
-            if(labelText === 'LINK') labelText = 'ZIEL URL';
-            if(labelText.includes('GLOBAL FOOTER CLAIM')) labelText = 'FOOTER SLOGAN';
+            
+            // Fix Labels: Nur Links sind "Ziel URL", alles andere wird normal angezeigt
+            if(field.type === 'link' || field.type === 'social') {
+                labelText = 'ZIEL URL';
+            }
+            // Spezielle Overrides
+            if(field.key.includes('global_footer_claim')) labelText = 'FOOTER SLOGAN';
+            if(field.key.includes('global_telefon_text')) labelText = 'TELEFON ANZEIGE';
+            if(field.key.includes('global_email_text')) labelText = 'EMAIL ANZEIGE';
 
             const wrap = document.createElement('div');
             wrap.className = 'cms-field-wrap';
             
             let html = `<label class="cms-label-small">${labelText}</label>`;
 
-            // -- SOCIAL INPUT --
+            // -- 1. SOCIAL (Icon + Link) --
             if(field.type === 'social') {
                 let iconSrc = '';
                 if(field.key.includes('whatsapp')) iconSrc = '../whatsapp.png';
@@ -440,18 +469,11 @@
                     </div>
                 `;
             } 
-            // -- WYSIWYG EDITOR --
-            else if(field.type === 'textarea') {
-                html += `
-                    <div class="format-toolbar">
-                        <button class="format-btn" onmousedown="formatText('bold', event)" title="Fett"><b>B</b></button>
-                        <button class="format-btn" onmousedown="formatText('italic', event)" title="Kursiv"><i>I</i></button>
-                        <button class="format-btn" onmousedown="formatText('underline', event)" title="Unterstrichen"><u>U</u></button>
-                    </div>
-                    <div class="cms-editor" contenteditable="true" onblur="updateVal('${field.key}', this.innerHTML)">${val}</div>
-                `;
-            } 
-            // -- IMAGE --
+            // -- 2. REINER LINK (Kein Fett/Kursiv) --
+            else if(field.type === 'link') {
+                html += `<input type="text" value="${val.replace(/"/g, '&quot;')}" oninput="updateVal('${field.key}', this.value)" class="cms-input" placeholder="https://... oder tel:...">`;
+            }
+            // -- 3. IMAGE --
             else if(field.type === 'image') {
                 let prevSrc = val;
                 if(val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('../') && !val.startsWith('/')) {
@@ -468,8 +490,17 @@
                         </div>
                     </div>
                 `;
-            } else {
-                html += `<input type="text" value="${val.replace(/"/g, '&quot;')}" oninput="updateVal('${field.key}', this.value)" class="cms-input">`;
+            } 
+            // -- 4. ALLES ANDERE (TEXT) IST JETZT EDITOR --
+            else {
+                html += `
+                    <div class="format-toolbar">
+                        <button class="format-btn" onmousedown="formatText('bold', event)" title="Fett"><b>B</b></button>
+                        <button class="format-btn" onmousedown="formatText('italic', event)" title="Kursiv"><i>I</i></button>
+                        <button class="format-btn" onmousedown="formatText('underline', event)" title="Unterstrichen"><u>U</u></button>
+                    </div>
+                    <div class="cms-editor" contenteditable="true" onblur="updateVal('${field.key}', this.innerHTML)">${val}</div>
+                `;
             }
             wrap.innerHTML = html;
             parent.appendChild(wrap);
@@ -510,11 +541,9 @@
             grid.innerHTML = '';
             const images = new Set();
             
-            // 1. Repo Images
             [globalFields, ...Object.values(scannedFields)].flat().forEach(f => { 
                 if(f.type === 'image' && f.defaultVal) images.add(f.defaultVal); 
             });
-            // 2. Uploaded Images (Active)
             Object.values(contentData).forEach(v => { 
                 if(typeof v==='string' && v.startsWith('data:image')) images.add(v); 
             });
