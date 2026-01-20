@@ -465,31 +465,6 @@
   </main>
 
   <script src="./main.js" defer></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", async () => {
-        try {
-            // Hole Daten vom Worker
-            const res = await fetch('/api/admin'); 
-            const data = await res.json();
-
-            // Gehe durch alle gespeicherten Daten
-            for (const [key, value] of Object.entries(data)) {
-                // Suche Element mit passendem data-edit Attribut
-                const el = document.querySelector(`[data-edit="${key}"]`);
-                if (el) {
-                    if (el.tagName === 'IMG') {
-                        el.src = value; // Für Bilder
-                    } else if (el.tagName === 'A' && key.includes('link')) {
-                        el.href = value; // Für Links (z.B. Whatsapp)
-                    } else {
-                        el.innerText = value; // Für Text
-                    }
-                }
-            }
-        } catch (e) {
-            console.log("Konnte Inhalte nicht laden, nutze Standard.");
-        }
-    });
-</script>
+  <script src="/js/cms.js"></script>
 </body>
 </html>
