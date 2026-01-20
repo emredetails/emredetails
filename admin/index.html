@@ -277,7 +277,7 @@
         function showWelcome() {
             const toast = document.getElementById('welcome-toast');
             setTimeout(() => toast.classList.add('show'), 500);
-            setTimeout(() => toast.classList.remove('show'), 3000); // 3 Sekunden
+            setTimeout(() => toast.classList.remove('show'), 3000); 
         }
 
         // --- HELPERS ---
@@ -494,6 +494,30 @@
                 else groups['ALLGEMEIN'].push(f);
             });
 
+            // --- SORTIERUNG GLOBALS ---
+            const sortOrder = [
+                'global_logo',
+                'global_whatsapp_link',
+                'global_insta_link', 
+                'global_tiktok_link', 
+                'global_youtube_link', 
+                'global_hero_video', 
+                'global_telefon_text',
+                'global_email_text',
+                'global_adresse', 
+                'global_footer_claim'
+            ];
+            
+            if(groups['ALLGEMEIN'].length > 0) {
+                groups['ALLGEMEIN'].sort((a, b) => {
+                    let idxA = sortOrder.indexOf(a.key);
+                    let idxB = sortOrder.indexOf(b.key);
+                    if(idxA === -1) idxA = 999;
+                    if(idxB === -1) idxB = 999;
+                    return idxA - idxB;
+                });
+            }
+
             for (const [title, gFields] of Object.entries(groups)) {
                 if(gFields.length === 0) continue;
 
@@ -538,7 +562,17 @@
             
             let html = `<label class="cms-label-small">${labelText}</label>`;
 
-            if(field.type === 'social') {
+            // -- SPECIAL: YOUTUBE VIDEO (Icon + Input) --
+            if(field.key === 'global_hero_video') {
+                 let iconSrc = '../youtube.png';
+                 html += `
+                    <div class="social-input-wrap">
+                        <div class="social-icon-box"><img src="${iconSrc}" onerror="this.style.display='none'"></div>
+                        <input type="text" value="${val.replace(/"/g, '&quot;')}" onchange="updateVal('${field.key}', this.value)" placeholder="https://www.youtube.com/embed/...">
+                    </div>
+                `;
+            } 
+            else if(field.type === 'social') {
                 let iconSrc = '';
                 if(field.key.includes('whatsapp')) iconSrc = '../whatsapp.png';
                 if(field.key.includes('insta')) iconSrc = '../instagram.png';
