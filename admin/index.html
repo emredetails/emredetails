@@ -197,14 +197,13 @@
         </main>
     </div>
 
-    <script>
+<script>
         // ==========================================
         // KONFIGURATION
         // ==========================================
         const pagesToScan = [
-            { file: '/index.html', name: 'Home' },             
-            { file: '/leistungen.html', name: 'Leistungen' },             
-            { file: '/kontakt.html', name: 'Kontakt' },        
+            { file: '/index.html', name: 'Startseite' },
+            // { file: '/leistungen.html', name: 'Leistungen' }, 
         ];
         
         const API = '/api/admin';
@@ -216,7 +215,6 @@
             if(localStorage.getItem('token')) {
                 document.getElementById('login-overlay').classList.add('hidden');
                 document.getElementById('app').classList.remove('hidden');
-                // Fix für Flexbox display toggle
                 document.getElementById('app').style.display = 'flex'; 
                 initDashboard();
             }
@@ -282,22 +280,34 @@
                     elements.forEach(el => {
                         const key = el.getAttribute('data-edit');
                         let type = 'text';
-                        
-                        // Erkennung Bild (IMG Tag oder data-type="bg")
-                        if(el.tagName === 'IMG' || el.getAttribute('data-type') === 'bg') {
+                        let defaultValue = ''; // Das ist neu!
+
+                        // Typ Bestimmung & Default Wert extrahieren
+                        if(el.tagName === 'IMG') {
                             type = 'image';
-                        } else if(el.tagName === 'TEXTAREA' || el.innerText.length > 60 || el.tagName === 'P') {
-                            type = 'textarea';
+                            defaultValue = el.getAttribute('src');
+                        } else if(el.getAttribute('data-type') === 'bg') {
+                            type = 'image';
+                            // Versuche URL aus style="..." zu holen
+                            const style = el.getAttribute('style') || '';
+                            const match = style.match(/url\(['"]?(.*?)['"]?\)/);
+                            if(match) defaultValue = match[1];
+                        } else {
+                            // Text
+                            if(el.tagName === 'TEXTAREA' || el.innerText.length > 60 || el.tagName === 'P') {
+                                type = 'textarea';
+                            }
+                            // Wir nehmen innerHTML, damit <br> erhalten bleibt
+                            defaultValue = el.innerHTML.trim();
                         }
                         
-                        // Label formatieren (hero_title -> HERO TITLE)
                         let label = key.replace(/_/g, ' ').toUpperCase();
-                        fields.push({ key, type, label });
+                        fields.push({ key, type, label, defaultValue });
                     });
 
                     scannedFields[i] = fields;
 
-                    // Nav Item bauen
+                    // Nav Item
                     const div = document.createElement('div');
                     div.className = `nav-item`;
                     div.id = `nav-item-${i}`;
@@ -313,7 +323,6 @@
         }
 
         function openPage(index) {
-            // Active State
             document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
             document.getElementById(`nav-item-${index}`).classList.add('active');
             document.getElementById('current-page-title').innerText = pagesToScan[index].name;
@@ -331,21 +340,40 @@
             }
 
             fields.forEach(field => {
-                const val = contentData[field.key] || '';
+                // HIER IST DER TRICK: Entweder gespeicherter Wert ODER Default Wert aus HTML
+                let val = contentData[field.key];
+                if (val === undefined || val === null) {
+                    val = field.defaultValue || '';
+                }
+
                 let inputHtml = '';
 
                 if(field.type === 'textarea') {
+                    // HTML Entities decodieren für Bearbeitung wäre sauberer, aber simple reicht oft
+                    // Wir nutzen val direkt.
                     inputHtml = `<textarea oninput="updateVal('${field.key}', this.value)" class="cms-textarea">${val}</textarea>`;
                 } else if(field.type === 'image') {
-                    // Bild Upload + Preview
+                    // Pfad-Korrektur für Preview: Wenn Bild "./img/..." ist, muss Dashboard "../img/..." nutzen
+                    let previewSrc = val;
+                    if(val && !val.startsWith('http') && !val.startsWith('data:')) {
+                        // Relativen Pfad für Admin-Unterordner fixen
+                        if(!val.startsWith('../') && !val.startsWith('/')) {
+                             previewSrc = '../' + val.replace(/^\.\//, '');
+                        }
+                    }
+
                     inputHtml = `
                         <div class="img-preview-box">
-                            ${val ? `<img src="${val}" id="preview-${field.key}">` : `<span class="sub" id="msg-${field.key}">Kein Bild</span> <img id="preview-${field.key}" class="hidden">`}
+                            ${val ? `<img src="${previewSrc}" id="preview-${field.key}">` : `<span class="sub" id="msg-${field.key}">Kein Bild</span> <img id="preview-${field.key}" class="hidden">`}
                         </div>
                         <input type="file" accept="image/*" onchange="handleImage('${field.key}', this)">
+                        <div style="font-size:11px; color:rgba(255,255,255,0.3); margin-top:4px;">Aktuell: ${val.substring(0, 50)}...</div>
                     `;
                 } else {
-                    inputHtml = `<input type="text" value="${val}" oninput="updateVal('${field.key}', this.value)" class="cms-input">`;
+                    // Input Text
+                    // Anführungszeichen escapen, damit Input nicht bricht
+                    const safeVal = val.replace(/"/g, '&quot;');
+                    inputHtml = `<input type="text" value="${safeVal}" oninput="updateVal('${field.key}', this.value)" class="cms-input">`;
                 }
 
                 const group = document.createElement('div');
@@ -388,8 +416,8 @@
 
             if(res.ok) {
                 btn.innerHTML = '<i class="fa-solid fa-check"></i> &nbsp; Gespeichert';
-                btn.classList.replace('pill--primary', 'pill--good'); // Grün machen
-                btn.style.color = '#000'; // Text dunkel für Kontrast auf Grün
+                btn.classList.replace('pill--primary', 'pill--good');
+                btn.style.color = '#000'; 
                 
                 setTimeout(() => {
                     btn.innerHTML = originalHTML;
