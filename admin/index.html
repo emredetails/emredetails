@@ -14,7 +14,7 @@
         
         aside {
             width: 280px; background: #0f0f0f; border-right: 1px solid #222;
-            display: flex; flex-direction: column; flex-shrink: 0;
+            display: flex; flex-direction: column; flex-shrink: 0; z-index: 50; transition: transform 0.3s ease;
         }
         main {
             flex: 1; display: flex; flex-direction: column; position: relative;
@@ -26,7 +26,7 @@
             background: #0f0f0f;
         }
 
-        /* Sidebar */
+        /* Sidebar Elements */
         .sidebar-header { height: 70px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid #222; }
         .nav-category { font-size: 11px; text-transform: uppercase; color: #555; padding: 24px 24px 10px; font-weight: 700; letter-spacing: 1px; }
         .nav-item {
@@ -39,13 +39,27 @@
         .nav-item.active { background: #1a1a1a; color: #fff; font-weight: 500; border-left-color: #fff; }
         .badge-count { background: #000; padding: 2px 8px; border-radius: 6px; font-size: 11px; color: #555; }
 
+        /* Mobile specific elements */
+        .burger-btn { display: none; background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; margin-right: 15px; }
+        .mobile-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 40; display: none; backdrop-filter: blur(2px); }
+        .mobile-overlay.active { display: block; }
+
+        @media (max-width: 768px) {
+            aside { position: fixed; top: 0; left: 0; bottom: 0; transform: translateX(-100%); width: 85%; max-width: 300px; box-shadow: 10px 0 30px rgba(0,0,0,0.5); }
+            aside.open { transform: translateX(0); }
+            .burger-btn { display: block; }
+            header { padding: 0 15px; }
+            .history-group { display: none !important; } /* Hide Undo/Redo on tiny screens to save space */
+        }
+
         /* Editor Area */
         .editor-scroll { flex: 1; overflow-y: auto; padding: 40px; scroll-behavior: smooth; }
         .editor-container { max-width: 800px; margin: 0 auto; padding-bottom: 100px; }
+        @media (max-width: 768px) { .editor-scroll { padding: 20px; } }
 
         .cms-card {
             background: #1a1a1a; border: 1px solid #2a2a2a;
-            border-radius: 12px; margin-bottom: 40px; /* Mehr Abstand */
+            border-radius: 12px; margin-bottom: 40px; 
             overflow: visible; 
             transition: border-color 0.2s;
         }
@@ -57,7 +71,7 @@
         }
         .cms-card-body { padding: 24px; display: grid; gap: 24px; }
 
-        /* Sub-Headlines in Cards (für Pakete Trennung) */
+        /* Sub-Headlines */
         .cms-separator { 
             grid-column: 1 / -1; margin-top: 15px; margin-bottom: 5px; padding-bottom: 10px; 
             border-bottom: 1px solid #333; color: #666; font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px; 
@@ -67,7 +81,6 @@
         .cms-field-wrap { position: relative; }
         .cms-label-small { display: block; font-size: 11px; color: #666; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
         
-        /* Standard Input (für Links) */
         .cms-input {
             width: 100%; background: #0a0a0a; border: 1px solid #333;
             color: #ddd; padding: 12px 14px; border-radius: 8px;
@@ -75,7 +88,7 @@
         }
         .cms-input:focus { border-color: #555; background: #000; }
 
-        /* --- VISUAL EDITOR (WYSIWYG) - Für alle Texte --- */
+        /* --- VISUAL EDITOR (WYSIWYG) --- */
         .cms-editor {
             width: 100%; min-height: 46px; 
             background: #0a0a0a; border: 1px solid #333;
@@ -113,6 +126,17 @@
         .social-input-wrap input { border: none; background: transparent; flex: 1; height: 44px; padding: 0 14px; color: #ddd; outline: none; }
         .social-input-wrap:focus-within { border-color: #555; }
 
+        /* Welcome Toast */
+        #welcome-toast {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+            background: #222; border: 1px solid #333; color: #fff;
+            padding: 12px 24px; border-radius: 50px; z-index: 2000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); font-size: 14px; font-weight: 500;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; gap: 10px;
+        }
+        #welcome-toast.show { transform: translateX(-50%) translateY(0); }
+
         /* Modals & Utils */
         #login-overlay, #media-modal { background: rgba(0,0,0,0.95); }
         .hidden { display: none !important; }
@@ -136,6 +160,11 @@
 </head>
 <body>
 
+    <div id="welcome-toast">
+        <i class="fa-solid fa-hand-sparkles" style="color: #648cff;"></i>
+        Willkommen! Was ändern wir heute an deiner Website?
+    </div>
+
     <div id="login-overlay" style="position:fixed; inset:0; z-index:9999; display:grid; place-items:center;">
         <div style="background:#111; padding:40px; border-radius:12px; border:1px solid #333; text-align:center; width:350px;">
             <h2 style="color:#fff; margin-bottom:20px;">Admin Login</h2>
@@ -155,8 +184,11 @@
         <div id="media-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:15px; overflow:auto;"></div>
     </div>
 
+    <div id="mobile-overlay" class="mobile-overlay" onclick="toggleSidebar()"></div>
+
     <div id="app" class="hidden" style="width:100%;">
-        <aside>
+        
+        <aside id="sidebar">
             <div class="sidebar-header">
                 <img src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" 
                      style="max-height:40px; width:auto; margin-right:15px;">
@@ -180,9 +212,13 @@
 
         <main>
             <header>
-                <h1 id="page-title" style="color:#fff; font-size:16px; font-weight:600;">Lade...</h1>
+                <div style="display:flex; align-items:center;">
+                    <button class="burger-btn" onclick="toggleSidebar()"><i class="fa-solid fa-bars"></i></button>
+                    <h1 id="page-title" style="color:#fff; font-size:16px; font-weight:600;">Lade...</h1>
+                </div>
+                
                 <div style="display:flex; gap:10px; align-items:center;">
-                    <div style="display:flex; gap:5px; margin-right:15px; border-right:1px solid #333; padding-right:15px;">
+                    <div class="history-group" style="display:flex; gap:5px; margin-right:15px; border-right:1px solid #333; padding-right:15px;">
                         <button class="history-btn" onclick="undo()" id="btn-undo" title="Rückgängig (Strg+Z)"><i class="fa-solid fa-rotate-left"></i></button>
                         <button class="history-btn" onclick="redo()" id="btn-redo" title="Wiederholen (Strg+Y)"><i class="fa-solid fa-rotate-right"></i></button>
                     </div>
@@ -214,7 +250,20 @@
         
         const API = '/api/admin';
         
-        // --- HELPERS: Cloudflare Email Decode ---
+        // --- MOBILE UI ---
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('mobile-overlay').classList.toggle('active');
+        }
+
+        // --- WELCOME ---
+        function showWelcome() {
+            const toast = document.getElementById('welcome-toast');
+            setTimeout(() => toast.classList.add('show'), 500);
+            setTimeout(() => toast.classList.remove('show'), 4500);
+        }
+
+        // --- HELPERS ---
         function cfDecode(email) {
             try {
                 let r = "";
@@ -277,6 +326,7 @@
                 document.getElementById('app').classList.remove('hidden');
                 document.getElementById('app').style.display = 'flex'; 
                 initDashboard();
+                showWelcome(); // SHOW WELCOME MESSAGE
             }
         }
         async function doLogin() {
@@ -300,7 +350,7 @@
             } catch(e) { contentData = {}; }
             
             await scanPages();
-            addToHistory(contentData); // Init History
+            addToHistory(contentData); 
             
             document.addEventListener('keydown', (e) => {
                 if((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
@@ -331,7 +381,6 @@
                         let type = 'text';
                         let defaultVal = el.innerHTML.trim();
 
-                        // EMAIL DECODE (Fix für [email protected])
                         const cfEmail = el.querySelector('.__cf_email__');
                         if(cfEmail) {
                             defaultVal = cfDecode(cfEmail.getAttribute('data-cfemail'));
@@ -344,16 +393,13 @@
                             const match = (el.getAttribute('style')||'').match(/url\(['"]?(.*?)['"]?\)/);
                             if(match) defaultVal = match[1];
                         } else if(el.tagName === 'A') {
-                            // WICHTIG: Links bleiben "link", können nicht fett gemacht werden
                             type = 'link'; 
                             defaultVal = el.getAttribute('href'); 
                             
-                            // Social Check
                             if(key.includes('whatsapp') || key.includes('insta') || key.includes('youtube') || key.includes('tiktok')) {
                                 type = 'social';
                             }
                         } else {
-                            // ALLES andere ist jetzt "formatted_text" (also WYSIWYG)
                             type = 'formatted_text';
                         }
 
@@ -374,7 +420,10 @@
                     const div = document.createElement('div');
                     div.className = 'nav-item';
                     div.id = `nav-p-${i}`;
-                    div.onclick = () => openPage(i);
+                    div.onclick = () => { 
+                        openPage(i); 
+                        if(window.innerWidth <= 768) toggleSidebar(); // Close sidebar on mobile click
+                    };
                     div.innerHTML = `<span><i class="fa-regular fa-file-lines" style="margin-right:10px;"></i> ${page.name}</span> <span class="badge-count">${pageFields.length}</span>`;
                     nav.appendChild(div);
 
@@ -392,6 +441,7 @@
                 document.getElementById('nav-globals').classList.add('active');
                 document.getElementById('page-title').innerText = "Globale Einstellungen";
                 fieldsToShow = globalFields;
+                if(window.innerWidth <= 768) toggleSidebar(); // Close on mobile click
             } else {
                 document.getElementById(`nav-p-${id}`).classList.add('active');
                 document.getElementById('page-title').innerText = pagesToScan[id].name;
@@ -406,7 +456,6 @@
                 return;
             }
 
-            // === INTELLIGENTE GRUPPIERUNG ===
             const groups = {
                 'HERO BEREICH': [],
                 'LEISTUNGEN & PAKETE': [],
@@ -426,7 +475,6 @@
                 else groups['ALLGEMEIN'].push(f);
             });
 
-            // Rendern der Gruppen
             for (const [title, gFields] of Object.entries(groups)) {
                 if(gFields.length === 0) continue;
 
@@ -436,14 +484,11 @@
                 const body = document.createElement('div');
                 body.className = 'cms-card-body';
 
-                // Sortierung innerhalb Pakete (Headlines zuerst, dann Pakete)
                 let lastSub = "";
                 gFields.forEach(f => {
-                    // Visuelle Trenner für Pakete innerhalb der Box
                     if(f.key.includes('_pkt_1_') && lastSub !== '1') { body.insertAdjacentHTML('beforeend', '<div class="cms-separator">PAKET 1 (INTERIEUR)</div>'); lastSub='1'; }
                     else if(f.key.includes('_pkt_2_') && lastSub !== '2') { body.insertAdjacentHTML('beforeend', '<div class="cms-separator">PAKET 2 (EXTERIEUR)</div>'); lastSub='2'; }
                     else if(f.key.includes('_pkt_3_') && lastSub !== '3') { body.insertAdjacentHTML('beforeend', '<div class="cms-separator">PAKET 3 (PREMIUM)</div>'); lastSub='3'; }
-                    
                     renderField(f, body);
                 });
 
@@ -453,21 +498,16 @@
         }
 
         function renderField(field, parent) {
-            // FILTER: Global Link Felder komplett ausblenden, damit man nur den Text ändert
             if(field.key === 'global_telefon_link' || field.key === 'global_email_link') return;
 
             let val = contentData[field.key];
             if(val === undefined || val === null) val = field.defaultVal || '';
 
-            // Clean Labels
             let labelText = field.key.toUpperCase().replace(/_/g, ' ');
             const parts = field.key.split('_');
             if(parts.length > 2) labelText = parts.slice(2).join(' ').toUpperCase();
             
-            if(field.type === 'link' || field.type === 'social') {
-                labelText = 'ZIEL URL';
-            }
-            // Spezielle Overrides
+            if(field.type === 'link' || field.type === 'social') labelText = 'ZIEL URL';
             if(field.key.includes('global_footer_claim')) labelText = 'FOOTER SLOGAN';
             if(field.key.includes('global_telefon_text')) labelText = 'TELEFON';
             if(field.key.includes('global_email_text')) labelText = 'EMAIL';
@@ -478,59 +518,26 @@
             
             let html = `<label class="cms-label-small">${labelText}</label>`;
 
-            // -- 1. SOCIAL (Icon + Link) --
             if(field.type === 'social') {
                 let iconSrc = '';
                 if(field.key.includes('whatsapp')) iconSrc = '../whatsapp.png';
                 if(field.key.includes('insta')) iconSrc = '../instagram.png';
                 if(field.key.includes('youtube')) iconSrc = '../youtube.png';
                 if(field.key.includes('tiktok')) iconSrc = '../tiktok.png';
-                
-                html += `
-                    <div class="social-input-wrap">
-                        <div class="social-icon-box"><img src="${iconSrc}" onerror="this.style.display='none'"></div>
-                        <input type="text" value="${val.replace(/"/g, '&quot;')}" onchange="updateVal('${field.key}', this.value)" placeholder="https://...">
-                    </div>
-                `;
-            } 
-            // -- 2. REINER LINK (Kein Fett/Kursiv) --
-            else if(field.type === 'link') {
+                html += `<div class="social-input-wrap"><div class="social-icon-box"><img src="${iconSrc}" onerror="this.style.display='none'"></div><input type="text" value="${val.replace(/"/g, '&quot;')}" onchange="updateVal('${field.key}', this.value)" placeholder="https://..."></div>`;
+            } else if(field.type === 'link') {
                 html += `<input type="text" value="${val.replace(/"/g, '&quot;')}" oninput="updateVal('${field.key}', this.value)" class="cms-input" placeholder="https://... oder tel:...">`;
-            }
-            // -- 3. IMAGE --
-            else if(field.type === 'image') {
+            } else if(field.type === 'image') {
                 let prevSrc = val;
-                if(val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('../') && !val.startsWith('/')) {
-                     prevSrc = '../' + val.replace(/^\.\//, '');
-                }
-                html += `
-                    <div style="display:flex; gap:15px; align-items:center;">
-                        <img src="${prevSrc}" id="preview-${field.key}" style="width:60px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #333; background:#000;">
-                        <div style="flex:1; display:flex; gap:10px;">
-                            <label class="pill pill--ghost" style="font-size:12px; padding:0 12px; height:36px; cursor:pointer;">
-                                Upload <input type="file" onchange="handleImage('${field.key}', this)" style="display:none;">
-                            </label>
-                            <button onclick="openLibrary('${field.key}')" class="pill pill--ghost" style="font-size:12px; padding:0 12px; height:36px;">Bibliothek</button>
-                        </div>
-                    </div>
-                `;
-            } 
-            // -- 4. ALLES ANDERE (TEXT) IST JETZT EDITOR --
-            else {
-                html += `
-                    <div class="format-toolbar">
-                        <button class="format-btn" onmousedown="formatText('bold', event)" title="Fett"><b>B</b></button>
-                        <button class="format-btn" onmousedown="formatText('italic', event)" title="Kursiv"><i>I</i></button>
-                        <button class="format-btn" onmousedown="formatText('underline', event)" title="Unterstrichen"><u>U</u></button>
-                    </div>
-                    <div class="cms-editor" contenteditable="true" onblur="updateVal('${field.key}', this.innerHTML)">${val}</div>
-                `;
+                if(val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('../') && !val.startsWith('/')) prevSrc = '../' + val.replace(/^\.\//, '');
+                html += `<div style="display:flex; gap:15px; align-items:center;"><img src="${prevSrc}" id="preview-${field.key}" style="width:60px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #333; background:#000;"><div style="flex:1; display:flex; gap:10px;"><label class="pill pill--ghost" style="font-size:12px; padding:0 12px; height:36px; cursor:pointer;">Upload <input type="file" onchange="handleImage('${field.key}', this)" style="display:none;"></label><button onclick="openLibrary('${field.key}')" class="pill pill--ghost" style="font-size:12px; padding:0 12px; height:36px;">Bibliothek</button></div></div>`;
+            } else {
+                html += `<div class="format-toolbar"><button class="format-btn" onmousedown="formatText('bold', event)" title="Fett"><b>B</b></button><button class="format-btn" onmousedown="formatText('italic', event)" title="Kursiv"><i>I</i></button><button class="format-btn" onmousedown="formatText('underline', event)" title="Unterstrichen"><u>U</u></button></div><div class="cms-editor" contenteditable="true" onblur="updateVal('${field.key}', this.innerHTML)">${val}</div>`;
             }
             wrap.innerHTML = html;
             parent.appendChild(wrap);
         }
 
-        // --- STATE & TOOLS ---
         let debounceTimer;
         function updateVal(k, v) { 
             contentData[k] = v;
@@ -543,7 +550,6 @@
             document.execCommand(cmd, false, null);
         }
 
-        // --- IMAGES ---
         function handleImage(k, inp) {
             const f = inp.files[0];
             if(!f || f.size > 15*1024*1024) return alert('Max 15MB');
@@ -558,20 +564,17 @@
             document.getElementById(`preview-${k}`).src = d;
         }
         
-        // --- LIBRARY LOGIC ---
         function openLibrary(k) {
             currentImageKey = k;
             const grid = document.getElementById('media-grid');
             grid.innerHTML = '';
             const images = new Set();
-            
             [globalFields, ...Object.values(scannedFields)].flat().forEach(f => { 
                 if(f.type === 'image' && f.defaultVal) images.add(f.defaultVal); 
             });
             Object.values(contentData).forEach(v => { 
                 if(typeof v==='string' && v.startsWith('data:image')) images.add(v); 
             });
-            
             images.forEach(src => {
                 let d = src;
                 if(!src.startsWith('data:') && !src.startsWith('http')) {
