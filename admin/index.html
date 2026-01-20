@@ -148,6 +148,7 @@
                         const key = el.getAttribute('data-edit');
                         let type = 'text';
                         if(el.tagName === 'IMG') type = 'image';
+                        if(el.getAttribute('data-type') === 'bg') type = 'image';
                         if(el.tagName === 'TEXTAREA' || el.innerText.length > 60) type = 'textarea';
                         if(key.includes('link')) type = 'link';
 
