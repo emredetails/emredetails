@@ -364,7 +364,7 @@
         }, 500);
     }
 
-    // --- INTELLIGENT SCANNER ---
+// --- INTELLIGENT SCANNER ---
     async function scanAllPages() {
         const nav = document.getElementById('page-nav');
         nav.innerHTML = '';
@@ -405,6 +405,13 @@
                     // Sections durchgehen
                     allSections.forEach((sec, idx) => {
                         const fields = [];
+
+                        // FIX: Prüfen, ob die Section SELBST ein bearbeitbares Feld ist (z.B. Hintergrundbild)
+                        if(sec.hasAttribute('data-edit') && !sec.getAttribute('data-edit').startsWith('global_')) {
+                            fields.push(analyzeElement(sec));
+                        }
+
+                        // Dann den INHALT der Section scannen
                         sec.querySelectorAll('[data-edit]').forEach(el => {
                             if(!el.getAttribute('data-edit').startsWith('global_')) {
                                 fields.push(analyzeElement(el));
