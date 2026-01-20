@@ -16,7 +16,7 @@
         <a class="nav__link" href="./leistungen.html">Leistungen</a>
         <a class="nav__link" href="./kontakt.html">Kontakt</a>
       </nav>
-      <div class="topbar__actions"><a class="pill pill--primary" href="https://wa.me/491714745229"><img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp</a></div>
+      <div class="topbar__actions"><a class="pill pill--primary" href="https://wa.me/491714745229" data-edit="global_whatsapp_link"><img class="pill__img" src="./whatsapp.png" alt=""> WhatsApp</a></div>
     </div>
   </header>
 
@@ -24,22 +24,24 @@
     <section class="section legal">
       <div class="container">
         <div class="sectionHead reveal">
-          <h1 class="h2">Impressum</h1>
-          <p class="sub">Rechtliche Angaben</p>
+          <h1 class="h2" data-edit="impressum_headline">Impressum</h1>
+          <p class="sub" data-edit="impressum_sub">Rechtliche Angaben</p>
         </div>
         <div class="legal__content reveal">
-          <p><strong>Impressum gemäß § 5 DDG</strong><br>
+          <p data-edit="impressum_adresse_block"><strong>Impressum gemäß § 5 DDG</strong><br>
 EmreDetails<br>
 Inhaber: Emre Özkul<br>
 Hebbelstr. 75<br>
 45768 Marl<br>
 Deutschland</p>
+
 <p><strong>Kontakt:</strong><br>
-Telefon: +49 171 4745229<br>
-E-Mail: info@emredetails.de</p>
-<p><strong>Umsatzsteuer-ID</strong> gemäß § 27a Umsatzsteuergesetz:<br>
+Telefon: <span data-edit="global_telefon_text">+49 171 4745229</span><br>
+E-Mail: <span data-edit="global_email_text">info@emredetails.de</span></p>
+
+<p data-edit="impressum_steuer_id"><strong>Umsatzsteuer-ID</strong> gemäß § 27a Umsatzsteuergesetz:<br>
 nicht umsatzsteuerpflichtig</p>
-<p><strong>Verantwortlich für den Inhalt:</strong><br>
+<p data-edit="impressum_verantwortlich"><strong>Verantwortlich für den Inhalt:</strong><br>
 Emre Özkul</p>
         </div>
       </div>
@@ -50,9 +52,9 @@ Emre Özkul</p>
     <div class="container footer__inner">
       <div class="footer__left">
         <div class="footer__brand">
-          <img class="footer__logo" src="./logo.png" alt="EmreDetails" loading="lazy" decoding="async">
+          <img class="footer__logo" src="https://cdn.prod.website-files.com/67f11742c5f3bcc352d799cc/67f14fa65b0383b0565fd742_emre%20details%20blue%20transparent%20bg.png" alt="EmreDetails" loading="lazy" decoding="async" data-edit="global_logo">
         </div>
-        <div class="footer__sub">
+        <div class="footer__sub" data-edit="global_footer_claim">
           Fahrzeugaufbereitung in Marl.
         </div>
       </div>
@@ -70,10 +72,11 @@ Emre Özkul</p>
     </div>
   </footer>
 
-  <a class="fab" href="https://wa.me/491714745229" target="_blank" rel="noreferrer" aria-label="WhatsApp öffnen">
+  <a class="fab" href="https://wa.me/491714745229" target="_blank" rel="noreferrer" aria-label="WhatsApp öffnen" data-edit="global_whatsapp_link">
     WhatsApp
   </a>
 
   <script src="./main.js" defer></script>
+  <script src="/js/cms.js"></script>
 </body>
 </html>
