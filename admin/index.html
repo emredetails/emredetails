@@ -304,8 +304,6 @@
         // Refresh Current View without full reload
         const activeNav = document.querySelector('.nav-item.active');
         if(activeNav) {
-            // Re-render inputs only to keep cursor/focus if possible, 
-            // but simple re-render is safer for consistency.
             const pageId = activeNav.id.replace('nav-p-', '');
             if(pageId === 'nav-globals') openPage('globals'); 
             else openPage(parseInt(pageId));
@@ -359,7 +357,6 @@
 
         openPage('globals'); 
         
-        // Welcome Toast
         setTimeout(() => {
             const t = document.getElementById('welcome-toast');
             t.classList.add('show');
@@ -382,8 +379,7 @@
                 const text = await res.text();
                 const doc = new DOMParser().parseFromString(text, 'text/html');
                 
-                // 1. Globals Scan (Header/Footer/Nav)
-                // Alles was "global_" heißt, kommt in den Globals-Topf
+                // 1. Globals Scan
                 doc.querySelectorAll('[data-edit^="global_"]').forEach(el => {
                     const key = el.getAttribute('data-edit');
                     if(!seenGlobals.has(key)) {
@@ -393,11 +389,10 @@
                 });
 
                 // 2. Section Scan
-                // Wir suchen alle <section> Elemente
                 const sections = [];
                 const allSections = doc.querySelectorAll('section');
                 
-                // Fallback für Seiten ohne Sections (z.B. Impressum) -> Alles in "Inhalt"
+                // Fallback für Seiten ohne Sections
                 if(allSections.length === 0) {
                     const fields = [];
                     doc.querySelectorAll('[data-edit]').forEach(el => {
@@ -410,7 +405,6 @@
                     // Sections durchgehen
                     allSections.forEach((sec, idx) => {
                         const fields = [];
-                        // Suche alle data-edit INNERHALB dieser Section
                         sec.querySelectorAll('[data-edit]').forEach(el => {
                             if(!el.getAttribute('data-edit').startsWith('global_')) {
                                 fields.push(analyzeElement(el));
@@ -418,22 +412,16 @@
                         });
 
                         if(fields.length > 0) {
-                            // Titel der Section ermitteln
                             let title = sec.getAttribute('id') || `SECTION ${idx + 1}`;
-                            
-                            // Intelligente Benennung:
-                            // Versuche, eine Headline (h2) in der Section zu finden, um den Namen zu erraten
                             const h2 = sec.querySelector('h2, .sectionHead h2, .h2');
                             if(h2 && h2.innerText.trim().length > 0 && h2.innerText.trim().length < 30) {
                                 title = h2.innerText.trim().toUpperCase();
                             } else {
-                                // Fallback ID cleanup
                                 title = title.replace(/-/g, ' ').toUpperCase();
                                 if(title.includes('HERO')) title = 'HERO BEREICH';
                                 if(title.includes('PAKETE')) title = 'PAKETE & PREISE';
                                 if(title.includes('FAQ')) title = 'HÄUFIGE FRAGEN';
                             }
-
                             sections.push({ title, fields });
                         }
                     });
@@ -441,7 +429,7 @@
 
                 pageStructure[i] = sections;
 
-                // Nav Item erstellen
+                // Nav Item
                 const div = document.createElement('div');
                 div.className = 'nav-item';
                 div.id = `nav-p-${i}`;
@@ -449,7 +437,6 @@
                     openPage(i); 
                     if(window.innerWidth <= 768) toggleSidebar(); 
                 };
-                // Count Total Fields
                 const totalFields = sections.reduce((acc, s) => acc + s.fields.length, 0);
                 div.innerHTML = `<span><i class="fa-regular fa-file-lines" style="margin-right:10px;"></i> ${page.name}</span> <span class="badge-count">${totalFields}</span>`;
                 nav.appendChild(div);
@@ -458,7 +445,7 @@
         }
     }
 
-function analyzeElement(el) {
+    function analyzeElement(el) {
         const key = el.getAttribute('data-edit');
         let type = 'text';
         let defaultVal = el.innerHTML.trim();
@@ -468,15 +455,25 @@ function analyzeElement(el) {
             defaultVal = cfDecode(cfEmail.getAttribute('data-cfemail'));
         }
 
+        // TYPE DETECTION (WICHTIG!)
+        // 1. Ist es ein IMG Tag?
         if(el.tagName === 'IMG') {
-            type = 'image'; defaultVal = el.getAttribute('src');
-        } else if(el.tagName === 'IFRAME') {
-            type = 'text'; defaultVal = el.getAttribute('src');
-        } else if(el.getAttribute('data-type') === 'bg') {
+            type = 'image'; 
+            defaultVal = el.getAttribute('src');
+        } 
+        // 2. Ist es explizit als background-image markiert? (data-type="bg")
+        else if(el.getAttribute('data-type') === 'bg') {
             type = 'image';
             const match = (el.getAttribute('style')||'').match(/url\(['"]?(.*?)['"]?\)/);
             if(match) defaultVal = match[1];
-        } else if(el.tagName === 'A') {
+        } 
+        // 3. Iframe (Video)
+        else if(el.tagName === 'IFRAME') {
+            type = 'text'; 
+            defaultVal = el.getAttribute('src');
+        } 
+        // 4. Link (A-Tag)
+        else if(el.tagName === 'A') {
             type = 'link'; 
             defaultVal = el.getAttribute('href'); 
             
@@ -486,7 +483,9 @@ function analyzeElement(el) {
             }
 
             if(key.includes('whatsapp') || key.includes('insta') || key.includes('youtube') || key.includes('tiktok')) type = 'social';
-        } else {
+        } 
+        // 5. Fallback: Text
+        else {
             type = 'formatted_text';
         }
 
@@ -517,7 +516,7 @@ function analyzeElement(el) {
         }
     }
 
-function renderSection(sectionData, container) {
+    function renderSection(sectionData, container) {
         if(sectionData.fields.length === 0) return;
 
         const card = document.createElement('div');
@@ -532,33 +531,21 @@ function renderSection(sectionData, container) {
         sectionData.fields.forEach(f => {
             let currentGroup = null;
 
-            // 1. LEISTUNGEN: DIE GROSSEN PAKETE (Explizit erkannt)
             if(f.key.includes('pkt_basic')) currentGroup = "BASIC PAKET";
             else if(f.key.includes('pkt_premium')) currentGroup = "PREMIUM PAKET";
             else if(f.key.includes('pkt_luxus')) currentGroup = "LUXUS PAKET";
-
-            // 2. LEISTUNGEN: KATEGORIE-ÜBERSCHRIFTEN (Fix für dein Problem)
-            else if(f.key.includes('_cat_')) {
-                currentGroup = "NEUE KATEGORIE (ÜBERSCHRIFT)";
-            }
-
-            // 3. LEISTUNGEN: SERVICE GRUPPEN (Basics, Lack, Schutz...)
+            else if(f.key.includes('_cat_')) currentGroup = "NEUE KATEGORIE (ÜBERSCHRIFT)";
             else if(f.key.startsWith('svc_')) {
                  if(f.key.includes('_basics_')) currentGroup = "SERVICE: BASICS";
                  else if(f.key.includes('_lack_')) currentGroup = "SERVICE: LACK";
                  else if(f.key.includes('_schutz_')) currentGroup = "SERVICE: SCHUTZ";
                  else if(f.key.includes('_innen_')) currentGroup = "SERVICE: INNENRAUM";
             }
-
-            // 4. FALLBACK: NORMALE NUMMERIERUNG (für XPEL Steps, FAQ etc.)
             else {
                 const numMatch = f.key.match(/_(\d+)(_|$)/);
-                if(numMatch) {
-                    currentGroup = `GRUPPE ${numMatch[1]}`;
-                }
+                if(numMatch) currentGroup = `GRUPPE ${numMatch[1]}`;
             }
 
-            // RENDERING
             if(currentGroup && currentGroup !== lastGroup) {
                 body.insertAdjacentHTML('beforeend', `<div class="cms-separator">${currentGroup}</div>`);
                 lastGroup = currentGroup;
@@ -571,38 +558,31 @@ function renderSection(sectionData, container) {
         container.appendChild(card);
     }
 
-function renderField(field, parent) {
-        if(field.key.includes('_link_hidden')) return; // Versteckte Felder ignorieren
+    function renderField(field, parent) {
+        if(field.key.includes('_link_hidden')) return; 
 
         let val = contentData[field.key];
         if(val === undefined || val === null) val = field.defaultVal || '';
 
-        // 1. Standard Label aus dem Key generieren
+        // Labels
         let labelText = field.key;
         const parts = field.key.split('_');
-        if(parts.length >= 3) {
-            labelText = parts.slice(2).join(' ').toUpperCase();
-        } else {
-            labelText = labelText.toUpperCase().replace(/_/g, ' ');
-        }
+        if(parts.length >= 3) labelText = parts.slice(2).join(' ').toUpperCase();
+        else labelText = labelText.toUpperCase().replace(/_/g, ' ');
         
-        // 2. SPEZIFISCHE GLOBALE LABELS (Klartext)
+        // Spezifische Labels
         if(field.key.includes('global_telefon_link')) labelText = 'TELEFONNUMMER (WIRD GEWÄHLT)';
         else if(field.key.includes('global_telefon_text')) labelText = 'TELEFON (ANZEIGE AUF WEBSITE)';
-        
         else if(field.key.includes('global_email_link')) labelText = 'EMAIL ADRESSE (EMPFÄNGER)';
         else if(field.key.includes('global_email_text')) labelText = 'EMAIL (ANZEIGE AUF WEBSITE)';
-        
         else if(field.key.includes('global_adresse')) labelText = 'ADRESSE';
         else if(field.key.includes('global_footer_claim')) labelText = 'FOOTER TEXT (UNTEN)';
         else if(field.key.includes('global_logo')) labelText = 'FIRMENLOGO';
-        
         else if(field.key.includes('global_whatsapp')) labelText = 'WHATSAPP LINK';
         else if(field.key.includes('global_insta')) labelText = 'INSTAGRAM LINK';
         else if(field.key.includes('global_tiktok')) labelText = 'TIKTOK LINK';
         else if(field.key.includes('global_youtube')) labelText = 'YOUTUBE LINK';
         
-        // 3. Generische Labels (nur wenn oben nichts gegriffen hat)
         else if(field.key.includes('bg')) labelText = 'HINTERGRUND BILD';
         else if(field.type === 'link') labelText = 'LINK ZIEL (URL)';
 
@@ -611,7 +591,7 @@ function renderField(field, parent) {
         
         let html = `<label class="cms-label-small">${labelText}</label>`;
 
-        // Render Input Types
+        // === RENDER TYPES ===
         if(field.key === 'global_hero_video') {
              let iconSrc = '../youtube.png';
              html += `<div class="social-input-wrap"><div class="social-icon-box"><img src="${iconSrc}" onerror="this.style.display='none'"></div><input type="text" value="${val.replace(/"/g, '&quot;')}" onchange="updateVal('${field.key}', this.value)" placeholder="https://www.youtube.com/embed/..."></div>`;
@@ -631,6 +611,7 @@ function renderField(field, parent) {
             let prevSrc = val;
             if(val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('../') && !val.startsWith('/')) prevSrc = '../' + val.replace(/^\.\//, '');
             
+            // Fix für leere Bilder
             const imgStyle = `width:60px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #333; background:#000;`;
             
             html += `
@@ -692,28 +673,37 @@ function renderField(field, parent) {
         const grid = document.getElementById('media-grid');
         grid.innerHTML = '';
         const images = new Set();
-        // Collect from page structure
+        
+        // 1. Sammle Bilder aus der gescannten Struktur
         Object.values(pageStructure).forEach(sections => {
             sections.forEach(sec => {
                 sec.fields.forEach(f => { if(f.type==='image' && f.defaultVal) images.add(f.defaultVal); });
             });
         });
-        // Collect from contentData
+        
+        // 2. Sammle Bilder aus den Global Fields
+        globalFields.forEach(f => { if(f.type === 'image' && f.defaultVal) images.add(f.defaultVal); });
+
+        // 3. Sammle Bilder aus den gespeicherten Daten (für neue Uploads)
         Object.values(contentData).forEach(v => { 
             if(typeof v==='string' && v.startsWith('data:image')) images.add(v); 
         });
         
-        images.forEach(src => {
-            let d = src;
-            if(!src.startsWith('data:') && !src.startsWith('http')) {
-                if(!src.startsWith('../') && !src.startsWith('/')) d = '../' + src.replace(/^\.\//, '');
-            }
-            const div = document.createElement('img');
-            div.src = d; div.className = 'media-item';
-            div.style.width='100%'; div.style.aspectRatio='1'; div.style.objectFit='cover'; div.style.cursor='pointer';
-            div.onclick = () => { applyImage(currentImageKey, src); addToHistory(contentData); document.getElementById('media-modal').style.display='none'; };
-            grid.appendChild(div);
-        });
+        if(images.size === 0) {
+            grid.innerHTML = '<div style="color:#666; font-size:13px; padding:20px;">Noch keine Bilder vorhanden.</div>';
+        } else {
+            images.forEach(src => {
+                let d = src;
+                if(!src.startsWith('data:') && !src.startsWith('http')) {
+                    if(!src.startsWith('../') && !src.startsWith('/')) d = '../' + src.replace(/^\.\//, '');
+                }
+                const div = document.createElement('img');
+                div.src = d; div.className = 'media-item';
+                div.style.width='100%'; div.style.aspectRatio='1'; div.style.objectFit='cover'; div.style.cursor='pointer';
+                div.onclick = () => { applyImage(currentImageKey, src); addToHistory(contentData); document.getElementById('media-modal').style.display='none'; };
+                grid.appendChild(div);
+            });
+        }
         document.getElementById('media-modal').style.display='flex';
     }
     function closeLibrary() { document.getElementById('media-modal').style.display='none'; }
@@ -736,5 +726,3 @@ function renderField(field, parent) {
     let currentImageKey = null;
     checkAuth();
 </script>
-</body>
-</html>
