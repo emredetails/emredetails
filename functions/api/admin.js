@@ -8,72 +8,93 @@ export async function onRequest(context) {
   });
 
   try {
-    // 1. DATEN LADEN (GET)
+    // GET (Daten laden)
     if (request.method === "GET") {
       const data = await env.WEBSITE_CONTENT.get("site_data", { type: "json" });
-      return response(data || {});
+      return response(data || {}); 
     }
 
-    // 2. LOGIN (POST)
+    // POST LOGIN (Hier liegt das Problem)
     if (request.method === "POST" && url.searchParams.get("action") === "login") {
-      const { email } = await request.json();
+      const body = await request.json();
+      const emailInput = body.email || "";
+
+      // Debug: Wir holen die Variablen und erzwingen Strings
+      const configEmail = env.ADMIN_EMAIL ? String(env.ADMIN_EMAIL) : "";
+      const configKey = env.RESEND_API_KEY ? String(env.RESEND_API_KEY) : "";
+
+      // 1. Check: Fehlt die Config komplett?
+      if (!configEmail) return response({ error: "DEBUG: ADMIN_EMAIL ist in Cloudflare leer oder nicht gefunden." }, 500);
       
-      // Security Check
-      if (email.toLowerCase() !== env.ADMIN_EMAIL.toLowerCase()) {
-        return response({ error: "Keine Berechtigung" }, 403);
+      // 2. Check: Vergleich
+      const inputClean = emailInput.toLowerCase().trim();
+      const configClean = configEmail.toLowerCase().trim();
+
+      if (inputClean !== configClean) {
+        // --- DEBUG AUSGABE ---
+        // Das hier wird dir im Browser-Netzwerk-Tab genau zeigen, was falsch läuft
+        return response({ 
+          error: "Email Mismatch",
+          debug: {
+            du_hast_gesendet: inputClean,
+            cloudflare_hat_gespeichert: configClean,
+            laenge_input: inputClean.length,
+            laenge_config: configClean.length,
+            hinweis: "Sind da Anführungszeichen oder Leerzeichen zu viel?"
+          }
+        }, 403);
       }
 
+      // Wenn wir hier sind, passen die E-Mails. Weiter zu Resend.
       const code = Math.floor(100000 + Math.random() * 900000).toString();
-      await env.WEBSITE_CONTENT.put(`auth_${email}`, code, { expirationTtl: 900 }); // 15 Min
+      await env.WEBSITE_CONTENT.put(`auth_${emailInput}`, code, { expirationTtl: 900 });
 
-      // Resend API
-      const resend = await fetch("https://api.resend.com/emails", {
+      const resendResponse = await fetch("https://api.resend.com/emails", {
         method: "POST",
         headers: {
-          "Authorization": `Bearer ${env.RESEND_API_KEY}`,
+          "Authorization": `Bearer ${configKey.trim()}`,
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          from: "Admin Zugang <info@emredetails.de>",
-          to: email,
+          from: "Admin Zugang <info@emredetails.de>", 
+          to: emailInput,
           subject: "Dein Login Code",
-          html: `<p>Code: <strong>${code}</strong></p>`
+          html: `<p>Dein Code: <strong>${code}</strong></p>`
         })
       });
 
-      if (!resend.ok) return response({ error: "Mail Fehler" }, 500);
+      if (!resendResponse.ok) {
+        const errText = await resendResponse.text();
+        return response({ error: "Resend Fehler", details: errText }, 500);
+      }
+
       return response({ success: true });
     }
 
-    // 3. VERIFY (POST)
+    // REST (Verify & Save)
     if (request.method === "POST" && url.searchParams.get("action") === "verify") {
       const { email, code } = await request.json();
       const storedCode = await env.WEBSITE_CONTENT.get(`auth_${email}`);
-
       if (storedCode && storedCode === code) {
         await env.WEBSITE_CONTENT.delete(`auth_${email}`);
         const token = "session_" + crypto.randomUUID();
-        await env.WEBSITE_CONTENT.put(token, "valid", { expirationTtl: 86400 }); // 24h
+        await env.WEBSITE_CONTENT.put(token, "valid", { expirationTtl: 86400 }); 
         return response({ success: true, token });
       }
       return response({ error: "Code falsch" }, 401);
     }
 
-    // 4. SPEICHERN (POST)
     if (request.method === "POST" && url.searchParams.get("action") === "save") {
       const token = request.headers.get("Authorization");
-      const isValid = await env.WEBSITE_CONTENT.get(token);
-      
-      if (!isValid) return response({ error: "Nicht eingeloggt" }, 401);
-
+      if (!token || !(await env.WEBSITE_CONTENT.get(token))) return response({ error: "Session weg" }, 401);
       const newData = await request.json();
       await env.WEBSITE_CONTENT.put("site_data", JSON.stringify(newData));
       return response({ success: true });
     }
 
-    return response({ error: "Methode nicht erlaubt" }, 405);
+    return response({ error: "Methode ?" }, 405);
 
   } catch (err) {
-    return response({ error: err.message }, 500);
+    return response({ error: "CRASH", details: err.message, stack: err.stack }, 500);
   }
 }
