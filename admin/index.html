@@ -1,1 +1,276 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    <style>
+        body { background-color: #f3f4f6; }
+        .sidebar-active { background-color: #1f2937; border-left: 4px solid #3b82f6; }
+        .sidebar-item { border-left: 4px solid transparent; }
+    </style>
+</head>
+<body class="h-screen flex overflow-hidden font-sans text-gray-800">
 
+    <div id="login-overlay" class="fixed inset-0 bg-gray-900 z-50 flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-96 text-center">
+            <h2 class="text-2xl font-bold mb-6">Login</h2>
+            <div id="login-step-1">
+                <input type="email" id="email-input" placeholder="mail@kunde.de" class="w-full border p-3 rounded mb-4">
+                <button onclick="requestLogin()" class="w-full bg-blue-600 text-white p-3 rounded font-bold hover:bg-blue-700">Code senden</button>
+            </div>
+            <div id="login-step-2" class="hidden">
+                <p class="text-sm text-gray-500 mb-2">Code gesendet!</p>
+                <input type="text" id="code-input" placeholder="123456" class="w-full border p-3 rounded mb-4 text-center text-xl tracking-widest">
+                <button onclick="verifyLogin()" class="w-full bg-green-600 text-white p-3 rounded font-bold hover:bg-green-700">Bestätigen</button>
+            </div>
+            <p id="login-error" class="text-red-500 mt-4 text-sm"></p>
+        </div>
+    </div>
+
+    <div id="app" class="flex w-full hidden">
+        
+        <aside class="w-64 bg-gray-800 text-gray-300 flex flex-col shadow-xl">
+            <div class="p-6 text-white font-bold text-xl border-b border-gray-700 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group"></i> Website Admin
+            </div>
+            <nav class="flex-1 overflow-y-auto py-4" id="page-nav">
+                </nav>
+            <div class="p-4 border-t border-gray-700">
+                <button onclick="logout()" class="flex items-center gap-2 text-sm hover:text-white transition">
+                    <i class="fa-solid fa-sign-out-alt"></i> Abmelden
+                </button>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-screen">
+            <header class="bg-white h-16 shadow flex justify-between items-center px-8 z-10">
+                <h1 class="text-xl font-bold text-gray-700" id="current-page-title">Willkommen</h1>
+                <div class="flex gap-4">
+                    <a href="/" target="_blank" class="flex items-center gap-2 text-gray-500 hover:text-blue-600">
+                        <i class="fa-solid fa-external-link-alt"></i> Website öffnen
+                    </a>
+                    <button onclick="saveAll()" class="bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700 transition flex items-center gap-2">
+                        <i class="fa-solid fa-save"></i> Speichern
+                    </button>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-10">
+                <div id="editor-container" class="max-w-4xl mx-auto space-y-8">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // ==========================================
+        // KONFIGURATION (HIER SEITEN EINTRAGEN)
+        // ==========================================
+        const pagesToScan = [
+            { file: '/index.html', name: 'Startseite' },
+            // Füge hier weitere Seiten hinzu, z.B.:
+            // { file: '/leistungen.html', name: 'Leistungen' },
+            // { file: '/kontakt.html', name: 'Kontakt' }
+        ];
+        // ==========================================
+
+        let contentData = {};
+        const API = '/api/admin';
+        let scannedFields = {}; // Speichert Struktur: { 'Startseite': [ {key, type, label}... ] }
+
+        // --- AUTH ---
+        function checkAuth() {
+            if(localStorage.getItem('token')) {
+                document.getElementById('login-overlay').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+                initDashboard();
+            }
+        }
+
+        async function requestLogin() {
+            const email = document.getElementById('email-input').value;
+            const res = await fetch(`${API}?action=login`, { method:'POST', body: JSON.stringify({email})});
+            if(res.ok) {
+                document.getElementById('login-step-1').classList.add('hidden');
+                document.getElementById('login-step-2').classList.remove('hidden');
+            } else alert('Fehler. Email prüfen.');
+        }
+
+        async function verifyLogin() {
+            const email = document.getElementById('email-input').value;
+            const code = document.getElementById('code-input').value;
+            const res = await fetch(`${API}?action=verify`, { method:'POST', body: JSON.stringify({email, code})});
+            const data = await res.json();
+            if(data.success) {
+                localStorage.setItem('token', data.token);
+                checkAuth();
+            } else document.getElementById('login-error').innerText = "Code ungültig.";
+        }
+
+        function logout() { localStorage.removeItem('token'); location.reload(); }
+
+        // --- CORE LOGIC ---
+        async function initDashboard() {
+            // 1. Gespeicherte Daten laden
+            const res = await fetch(API);
+            contentData = await res.json();
+
+            // 2. Seiten scannen und Menü bauen
+            await scanPages();
+            
+            // 3. Erste Seite öffnen
+            if(pagesToScan.length > 0) openPage(0);
+        }
+
+        async function scanPages() {
+            const nav = document.getElementById('page-nav');
+            nav.innerHTML = '';
+            scannedFields = {};
+
+            for (let i = 0; i < pagesToScan.length; i++) {
+                const page = pagesToScan[i];
+                
+                // Fetch HTML der echten Seite
+                try {
+                    const htmlReq = await fetch(page.file);
+                    const htmlText = await htmlReq.text();
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlText, 'text/html');
+                    
+                    // Suche alle data-edit elemente
+                    const elements = doc.querySelectorAll('[data-edit]');
+                    const fields = [];
+
+                    elements.forEach(el => {
+                        const key = el.getAttribute('data-edit');
+                        let type = 'text';
+                        if(el.tagName === 'IMG') type = 'image';
+                        if(el.tagName === 'TEXTAREA' || el.innerText.length > 60) type = 'textarea';
+                        if(key.includes('link')) type = 'link';
+
+                        // Versuche Label zu raten (z.B. data-label attribute oder key name)
+                        let label = key.replace(/_/g, ' ').toUpperCase();
+                        
+                        fields.push({ key, type, label });
+                    });
+
+                    scannedFields[i] = fields;
+
+                    // Menü Item
+                    const btn = document.createElement('a');
+                    btn.href = '#';
+                    btn.className = `block px-6 py-3 text-gray-400 hover:bg-gray-700 hover:text-white sidebar-item transition flex justify-between`;
+                    btn.innerHTML = `<span>${page.name}</span> <span class="text-xs bg-gray-700 px-2 py-1 rounded-full">${fields.length}</span>`;
+                    btn.onclick = () => openPage(i);
+                    btn.id = `nav-item-${i}`;
+                    nav.appendChild(btn);
+
+                } catch (e) {
+                    console.error("Fehler beim Scannen von " + page.file, e);
+                }
+            }
+        }
+
+        function openPage(index) {
+            // UI Highlight
+            document.querySelectorAll('.sidebar-item').forEach(el => {
+                el.classList.remove('sidebar-active', 'text-white', 'bg-gray-700');
+                el.classList.add('text-gray-400');
+            });
+            const activeBtn = document.getElementById(`nav-item-${index}`);
+            activeBtn.classList.add('sidebar-active', 'text-white', 'bg-gray-700');
+            activeBtn.classList.remove('text-gray-400');
+
+            document.getElementById('current-page-title').innerText = pagesToScan[index].name;
+            
+            renderFields(scannedFields[index]);
+        }
+
+        function renderFields(fields) {
+            const container = document.getElementById('editor-container');
+            container.innerHTML = '';
+
+            if(!fields || fields.length === 0) {
+                container.innerHTML = '<div class="text-center text-gray-400 mt-10">Keine bearbeitbaren Felder auf dieser Seite gefunden.<br>Füge <code>data-edit="name"</code> in deinem HTML hinzu.</div>';
+                return;
+            }
+
+            fields.forEach(field => {
+                const val = contentData[field.key] || '';
+                let inputHtml = '';
+
+                if(field.type === 'textarea') {
+                    inputHtml = `<textarea oninput="updateVal('${field.key}', this.value)" class="w-full border rounded p-3 h-32 focus:ring-2 focus:ring-blue-500 outline-none">${val}</textarea>`;
+                } else if(field.type === 'image') {
+                    inputHtml = `
+                        <div class="flex items-start gap-4">
+                            <div class="w-32 h-32 bg-gray-100 border rounded flex items-center justify-center overflow-hidden relative">
+                                <img src="${val}" id="preview-${field.key}" class="absolute inset-0 w-full h-full object-cover ${val ? '' : 'hidden'}">
+                                <span class="text-gray-400 text-xs text-center p-2 ${val ? 'hidden' : ''}">Kein Bild</span>
+                            </div>
+                            <div class="flex-1">
+                                <input type="file" accept="image/*" onchange="handleImage('${field.key}', this)" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 mb-2"/>
+                                <p class="text-xs text-gray-500">Max 1 MB. Wird automatisch skaliert.</p>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    inputHtml = `<input type="text" value="${val}" oninput="updateVal('${field.key}', this.value)" class="w-full border rounded p-3 focus:ring-2 focus:ring-blue-500 outline-none">`;
+                }
+
+                const html = `
+                    <div class="bg-white p-6 rounded shadow-sm border border-gray-200">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">${field.label}</label>
+                        ${inputHtml}
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', html);
+            });
+        }
+
+        function updateVal(key, val) { contentData[key] = val; }
+
+        function handleImage(key, input) {
+            const file = input.files[0];
+            if(!file) return;
+            if(file.size > 1024 * 1024) { alert('Datei zu groß (Max 1MB)'); return; }
+            
+            const reader = new FileReader();
+            reader.onload = e => {
+                contentData[key] = e.target.result;
+                const prev = document.getElementById(`preview-${key}`);
+                prev.src = e.target.result;
+                prev.classList.remove('hidden');
+                prev.nextElementSibling.classList.add('hidden'); // Text ausblenden
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function saveAll() {
+            const btn = document.querySelector('button[onclick="saveAll()"]');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Speichern...';
+            
+            const token = localStorage.getItem('token');
+            const res = await fetch(`${API}?action=save`, {
+                method: 'POST',
+                headers: { 'Authorization': token },
+                body: JSON.stringify(contentData)
+            });
+
+            if(res.ok) {
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Gespeichert';
+                setTimeout(() => btn.innerHTML = originalText, 2000);
+            } else {
+                alert('Fehler beim Speichern');
+                btn.innerHTML = originalText;
+            }
+        }
+
+        checkAuth();
+    </script>
+</body>
+</html>
