@@ -565,26 +565,33 @@ function renderSection(sectionData, container) {
         container.appendChild(card);
     }
 
-    function renderField(field, parent) {
-        if(field.key.includes('_link_hidden')) return; // Skip hidden logic fields
+function renderField(field, parent) {
+        if(field.key.includes('_link_hidden')) return; // Versteckte Felder ignorieren
 
         let val = contentData[field.key];
         if(val === undefined || val === null) val = field.defaultVal || '';
 
-        // Label Beautifier
+        // 1. Standard Label aus dem Key generieren
         let labelText = field.key;
-        // Entferne Prefix (z.B. xpel_pakete_)
         const parts = field.key.split('_');
         if(parts.length >= 3) {
-            // Nimm die letzten Teile als Label
             labelText = parts.slice(2).join(' ').toUpperCase();
         } else {
             labelText = labelText.toUpperCase().replace(/_/g, ' ');
         }
         
-        // Spezielle Labels
-        if(field.type === 'link') labelText = 'LINK ZIEL';
-        if(field.key.includes('bg')) labelText = 'HINTERGRUND BILD';
+        // 2. SPEZIFISCHE GLOBALE LABELS (Hier fixen wir Telefon/Email)
+        if(field.key.includes('global_telefon_link')) labelText = 'TELEFON (LINK / ANRUF)';
+        else if(field.key.includes('global_telefon_text')) labelText = 'TELEFON (ANZEIGETEXT)';
+        else if(field.key.includes('global_email_link')) labelText = 'EMAIL (MAILTO LINK)';
+        else if(field.key.includes('global_email_text')) labelText = 'EMAIL (ANZEIGETEXT)';
+        else if(field.key.includes('global_adresse')) labelText = 'ADRESSE';
+        else if(field.key.includes('global_footer_claim')) labelText = 'FOOTER SLOGAN';
+        else if(field.key.includes('global_logo')) labelText = 'FIRMENLOGO';
+        
+        // 3. Generische Labels (nur wenn oben nichts gegriffen hat)
+        else if(field.key.includes('bg')) labelText = 'HINTERGRUND BILD';
+        else if(field.type === 'link') labelText = 'LINK ZIEL (URL)';
 
         const wrap = document.createElement('div');
         wrap.className = 'cms-field-wrap';
@@ -611,7 +618,6 @@ function renderSection(sectionData, container) {
             let prevSrc = val;
             if(val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('../') && !val.startsWith('/')) prevSrc = '../' + val.replace(/^\.\//, '');
             
-            // Fix für leere/kaputte Images
             const imgStyle = `width:60px; height:60px; object-fit:cover; border-radius:6px; border:1px solid #333; background:#000;`;
             
             html += `
