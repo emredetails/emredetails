@@ -458,16 +458,16 @@
         }
     }
 
-    function analyzeElement(el) {
+function analyzeElement(el) {
         const key = el.getAttribute('data-edit');
         let type = 'text';
         let defaultVal = el.innerHTML.trim();
 
-        // CF Email Decode
         const cfEmail = el.querySelector('.__cf_email__');
-        if(cfEmail) defaultVal = cfDecode(cfEmail.getAttribute('data-cfemail'));
+        if(cfEmail) {
+            defaultVal = cfDecode(cfEmail.getAttribute('data-cfemail'));
+        }
 
-        // Type Detection
         if(el.tagName === 'IMG') {
             type = 'image'; defaultVal = el.getAttribute('src');
         } else if(el.tagName === 'IFRAME') {
@@ -479,6 +479,12 @@
         } else if(el.tagName === 'A') {
             type = 'link'; 
             defaultVal = el.getAttribute('href'); 
+            
+            if(defaultVal && defaultVal.includes('/cdn-cgi/l/email-protection#')) {
+                const encoded = defaultVal.split('#')[1];
+                defaultVal = 'mailto:' + cfDecode(encoded);
+            }
+
             if(key.includes('whatsapp') || key.includes('insta') || key.includes('youtube') || key.includes('tiktok')) type = 'social';
         } else {
             type = 'formatted_text';
