@@ -9,102 +9,106 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        /* --- ADMIN OVERRIDES (Grau statt Blau) --- */
-        body {
-            overflow: hidden; /* Scrollen nur im Main Bereich */
-            display: flex;
-            height: 100vh;
-        }
-
-        /* LOGIN SCREEN */
-        #login-overlay {
-            position: fixed; inset: 0; z-index: 9999;
-            background: var(--bg0);
-            display: grid; place-items: center;
-        }
-        .login-card {
-            width: 100%; max-width: 400px;
-            background: var(--card);
-            backdrop-filter: blur(var(--blur));
-            border: 1px solid var(--stroke);
-            border-radius: var(--radius);
-            padding: 40px;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }        
+        /* --- CORE DESIGN --- */
+        body { overflow: hidden; display: flex; height: 100vh; background: #050505; color: #ddd; font-family: 'Inter', sans-serif; }
+        
         aside {
             width: 280px; background: #0f0f0f; border-right: 1px solid #222;
             display: flex; flex-direction: column; flex-shrink: 0;
         }
         main {
             flex: 1; display: flex; flex-direction: column; position: relative;
-            background: #141414; /* Reines Dunkelgrau */
+            background: #141414; 
         }
         header {
             height: 70px; border-bottom: 1px solid #222; display: flex; 
-            align-items: center; justify-content: space-between; padding: 0 40px;
+            align-items: center; justify-content: space-between; padding: 0 30px;
             background: #0f0f0f;
         }
 
-        /* Sidebar Items */
+        /* Sidebar */
         .sidebar-header { height: 70px; display: flex; align-items: center; padding: 0 24px; border-bottom: 1px solid #222; }
-        .nav-category { font-size: 11px; text-transform: uppercase; color: #555; padding: 20px 20px 10px; font-weight: 700; letter-spacing: 1px; }
+        .nav-category { font-size: 11px; text-transform: uppercase; color: #555; padding: 24px 24px 10px; font-weight: 700; letter-spacing: 1px; }
         .nav-item {
-            padding: 12px 20px; margin: 2px 10px; border-radius: 8px;
+            padding: 12px 24px; margin: 2px 0;
             color: #888; font-size: 14px; cursor: pointer; transition: all 0.2s;
             display: flex; justify-content: space-between; align-items: center;
+            border-left: 3px solid transparent;
         }
-        .nav-item:hover { background: #222; color: #fff; }
-        .nav-item.active { background: #2a2a2a; color: #fff; font-weight: 500; border-left: 3px solid #fff; }
+        .nav-item:hover { background: #1a1a1a; color: #fff; }
+        .nav-item.active { background: #1a1a1a; color: #fff; font-weight: 500; border-left-color: #fff; }
         .badge-count { background: #000; padding: 2px 8px; border-radius: 6px; font-size: 11px; color: #555; }
 
-        /* Editor Cards */
-        .editor-scroll { flex: 1; overflow-y: auto; padding: 40px; }
+        /* Editor Area */
+        .editor-scroll { flex: 1; overflow-y: auto; padding: 40px; scroll-behavior: smooth; }
         .editor-container { max-width: 800px; margin: 0 auto; padding-bottom: 100px; }
 
         .cms-card {
-            background: #1a1a1a; border: 1px solid #333;
+            background: #1a1a1a; border: 1px solid #2a2a2a;
             border-radius: 12px; margin-bottom: 24px; overflow: hidden;
+            transition: border-color 0.2s;
         }
+        .cms-card:hover { border-color: #333; }
         .cms-card-header {
-            background: #222; padding: 12px 20px; border-bottom: 1px solid #333;
-            font-size: 13px; font-weight: 700; color: #ccc; text-transform: uppercase; letter-spacing: 0.5px;
+            background: #222; padding: 12px 20px; border-bottom: 1px solid #2a2a2a;
+            font-size: 12px; font-weight: 700; color: #999; text-transform: uppercase; letter-spacing: 1px;
         }
-        .cms-card-body { padding: 20px; display: grid; gap: 20px; }
+        .cms-card-body { padding: 20px; display: grid; gap: 24px; }
 
-        /* Inputs & Toolbar */
+        /* Inputs */
         .cms-field-wrap { position: relative; }
-        .cms-label-small { display: block; font-size: 11px; color: #666; margin-bottom: 6px; text-transform: uppercase; font-weight: 600; }
+        .cms-label-small { display: block; font-size: 11px; color: #666; margin-bottom: 8px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; }
         
         .cms-input, .cms-textarea {
             width: 100%; background: #0a0a0a; border: 1px solid #333;
-            color: #ddd; padding: 10px 12px; border-radius: 8px;
-            font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s;
+            color: #ddd; padding: 12px 14px; border-radius: 8px;
+            font-family: inherit; font-size: 14px; outline: none; transition: border-color 0.2s, background 0.2s;
         }
-        .cms-input:focus, .cms-textarea:focus { border-color: #666; background: #000; }
-        .cms-textarea { min-height: 80px; resize: vertical; line-height: 1.5; margin-top: 4px;}
+        .cms-input:focus, .cms-textarea:focus { border-color: #555; background: #000; }
+        .cms-textarea { min-height: 100px; resize: vertical; line-height: 1.6; }
 
-        /* Format Toolbar */
+        /* Toolbar (Hidden by default) */
         .format-toolbar {
-            display: flex; gap: 4px; margin-bottom: 4px;
+            display: flex; gap: 4px; position: absolute; top: -35px; right: 0;
+            background: #222; padding: 4px; border-radius: 6px; border: 1px solid #333;
+            opacity: 0; pointer-events: none; transition: opacity 0.2s, transform 0.2s;
+            transform: translateY(5px); z-index: 10;
         }
+        .cms-field-wrap:focus-within .format-toolbar { opacity: 1; pointer-events: all; transform: translateY(0); }
+        
         .format-btn {
-            background: #222; border: 1px solid #333; color: #aaa;
-            width: 28px; height: 28px; border-radius: 4px; cursor: pointer;
+            background: transparent; border: none; color: #aaa;
+            width: 24px; height: 24px; border-radius: 4px; cursor: pointer;
             font-family: serif; font-size: 14px; display: grid; place-items: center;
         }
         .format-btn:hover { background: #333; color: #fff; }
-        
-        /* Modals & Utils */
-        #media-modal { background: rgba(0,0,0,0.95); }
+
+        /* Social Icons Input */
+        .social-input-wrap { display: flex; align-items: center; background: #0a0a0a; border: 1px solid #333; border-radius: 8px; overflow: hidden; }
+        .social-icon-box { width: 40px; height: 40px; display: grid; place-items: center; background: #151515; border-right: 1px solid #333; }
+        .social-icon-box img { width: 20px; height: 20px; object-fit: contain; opacity: 0.8; }
+        .social-input-wrap input { border: none; background: transparent; flex: 1; height: 40px; padding: 0 12px; color: #ddd; outline: none; }
+        .social-input-wrap:focus-within { border-color: #555; }
+
+        /* Login & Modal */
+        #login-overlay, #media-modal { background: rgba(0,0,0,0.95); }
         .hidden { display: none !important; }
         .spin { animation: spin 1s linear infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
         
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #111; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+        
+        /* Undo/Redo Buttons */
+        .history-btn {
+            background: #222; border: 1px solid #333; color: #888;
+            width: 32px; height: 32px; border-radius: 6px; cursor: pointer;
+            display: grid; place-items: center; transition: all 0.2s;
+        }
+        .history-btn:hover:not(:disabled) { background: #333; color: #fff; }
+        .history-btn:disabled { opacity: 0.3; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -112,22 +116,18 @@
     <div id="login-overlay" style="position:fixed; inset:0; z-index:9999; display:grid; place-items:center;">
         <div style="background:#111; padding:40px; border-radius:12px; border:1px solid #333; text-align:center; width:350px;">
             <h2 style="color:#fff; margin-bottom:20px;">Admin Login</h2>
-            <div id="login-step-1">
-                <input type="email" id="email-input" placeholder="Email" class="cms-input" style="margin-bottom:15px; text-align:center;">
-                <button onclick="requestLogin()" class="pill pill--primary pill--full">Code senden</button>
-            </div>
-            <div id="login-step-2" class="hidden">
-                <input type="text" id="code-input" placeholder="123456" class="cms-input" style="margin-bottom:15px; text-align:center; font-size:20px; letter-spacing:3px;">
-                <button onclick="verifyLogin()" class="pill pill--primary pill--full">Einloggen</button>
-            </div>
-            <p id="login-error" style="color:#ff5555; margin-top:10px; font-size:13px;"></p>
+            <form onsubmit="event.preventDefault(); doLogin();">
+                <input type="password" id="password-input" placeholder="Passwort" class="cms-input" style="text-align:center; margin-bottom:15px; font-size:16px;">
+                <button type="submit" id="login-btn" class="pill pill--primary pill--full">Einloggen</button>
+            </form>
+            <p id="login-error" style="color:#ff5555; margin-top:15px; font-size:13px;"></p>
         </div>
     </div>
 
     <div id="media-modal" style="position:fixed; inset:0; z-index:9000; display:none; flex-direction:column; padding:40px;">
         <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
             <h2 style="color:#fff;">Bild auswählen</h2>
-            <button onclick="closeLibrary()" style="background:none; border:none; color:#aaa; cursor:pointer;">Schließen</button>
+            <button onclick="closeLibrary()" style="background:none; border:none; color:#aaa; cursor:pointer;">Schließen (ESC)</button>
         </div>
         <div id="media-grid" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:15px; overflow:auto;"></div>
     </div>
@@ -157,8 +157,13 @@
 
         <main>
             <header>
-                <h1 id="page-title" style="color:#fff; font-size:18px;">Lade...</h1>
-                <div style="display:flex; gap:10px;">
+                <h1 id="page-title" style="color:#fff; font-size:16px; font-weight:600;">Lade...</h1>
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <div style="display:flex; gap:5px; margin-right:15px; border-right:1px solid #333; padding-right:15px;">
+                        <button class="history-btn" onclick="undo()" id="btn-undo" title="Rückgängig (Strg+Z)"><i class="fa-solid fa-rotate-left"></i></button>
+                        <button class="history-btn" onclick="redo()" id="btn-redo" title="Wiederholen (Strg+Y)"><i class="fa-solid fa-rotate-right"></i></button>
+                    </div>
+
                     <a href="/" target="_blank" class="pill pill--ghost" style="height: 38px;">
                         <i class="fa-solid fa-external-link-alt"></i> &nbsp; Website
                     </a>
@@ -179,10 +184,57 @@
             { file: '/index.html', name: 'Startseite' },
             { file: '/leistungen.html', name: 'Leistungen' },
             { file: '/kontakt.html', name: 'Kontakt' },
-            // Impressum/AGB/Datenschutz optional, da meist statisch
         ];
         
         const API = '/api/admin';
+        
+        // --- HISTORY SYSTEM (Undo/Redo) ---
+        let history = [];
+        let historyIndex = -1;
+        let isInternalUpdate = false; // Verhindert History-Eintrag bei Undo
+
+        function addToHistory(newState) {
+            if(isInternalUpdate) return;
+            // Wenn wir in der Vergangenheit waren und was ändern, Zukunft abschneiden
+            if(historyIndex < history.length - 1) {
+                history = history.slice(0, historyIndex + 1);
+            }
+            history.push(JSON.parse(JSON.stringify(newState)));
+            historyIndex++;
+            updateHistoryBtns();
+        }
+
+        function undo() {
+            if(historyIndex > 0) {
+                historyIndex--;
+                isInternalUpdate = true;
+                contentData = JSON.parse(JSON.stringify(history[historyIndex]));
+                // UI neu laden
+                const activeNav = document.querySelector('.nav-item.active');
+                if(activeNav) activeNav.click(); // Hacky refresh
+                isInternalUpdate = false;
+                updateHistoryBtns();
+            }
+        }
+
+        function redo() {
+            if(historyIndex < history.length - 1) {
+                historyIndex++;
+                isInternalUpdate = true;
+                contentData = JSON.parse(JSON.stringify(history[historyIndex]));
+                const activeNav = document.querySelector('.nav-item.active');
+                if(activeNav) activeNav.click();
+                isInternalUpdate = false;
+                updateHistoryBtns();
+            }
+        }
+
+        function updateHistoryBtns() {
+            document.getElementById('btn-undo').disabled = historyIndex <= 0;
+            document.getElementById('btn-redo').disabled = historyIndex >= history.length - 1;
+        }
+
+        // --- GLOBAL VARS ---
         let contentData = {};
         let scannedFields = {}; 
         let globalFields = []; 
@@ -197,19 +249,17 @@
                 initDashboard();
             }
         }
-        async function requestLogin() {
-            const email = document.getElementById('email-input').value;
-            const res = await fetch(`${API}?action=login`, { method:'POST', body: JSON.stringify({email})});
-            if(res.ok) { document.getElementById('login-step-1').classList.add('hidden'); document.getElementById('login-step-2').classList.remove('hidden'); }
-            else document.getElementById('login-error').innerText = "Zugriff verweigert.";
-        }
-        async function verifyLogin() {
-            const email = document.getElementById('email-input').value;
-            const code = document.getElementById('code-input').value;
-            const res = await fetch(`${API}?action=verify`, { method:'POST', body: JSON.stringify({email, code})});
-            const data = await res.json();
-            if(data.success) { localStorage.setItem('token', data.token); checkAuth(); }
-            else document.getElementById('login-error').innerText = "Code ungültig.";
+        async function doLogin() {
+            const btn = document.getElementById('login-btn');
+            const pwd = document.getElementById('password-input').value;
+            const old = btn.innerText; btn.innerText="...";
+            
+            try {
+                const res = await fetch(`${API}?action=login`, { method:'POST', body:JSON.stringify({password: pwd, email:'admin'}) }); // Email dummy
+                const data = await res.json();
+                if(res.ok && data.success) { localStorage.setItem('token', data.token); checkAuth(); }
+                else { document.getElementById('login-error').innerText = "Falsches Passwort"; btn.innerText=old; }
+            } catch(e) { btn.innerText=old; }
         }
         function logout() { localStorage.removeItem('token'); location.reload(); }
 
@@ -219,7 +269,18 @@
                 const res = await fetch(API);
                 contentData = await res.json();
             } catch(e) { contentData = {}; }
+            
             await scanPages();
+            
+            // Init History mit Startzustand
+            addToHistory(contentData);
+            
+            // Shortcuts
+            document.addEventListener('keydown', (e) => {
+                if((e.ctrlKey || e.metaKey) && e.key === 'z') { e.preventDefault(); undo(); }
+                if((e.ctrlKey || e.metaKey) && e.key === 'y') { e.preventDefault(); redo(); }
+            });
+
             openPage('globals'); 
         }
 
@@ -251,14 +312,18 @@
                             const match = (el.getAttribute('style')||'').match(/url\(['"]?(.*?)['"]?\)/);
                             if(match) defaultVal = match[1];
                         } else if(el.tagName === 'A') {
-                            type = 'text'; defaultVal = el.getAttribute('href'); // Link
+                            type = 'text'; defaultVal = el.getAttribute('href'); 
+                            
+                            // Spezielle Logik für Social Links: Icon erkennen
+                            if(key.includes('whatsapp') || key.includes('insta') || key.includes('youtube') || key.includes('tiktok')) {
+                                type = 'social';
+                            }
                         } else if(el.tagName === 'TEXTAREA' || el.innerText.length > 50) {
                             type = 'textarea';
                         }
 
                         const fieldObj = { key, type, defaultVal };
 
-                        // Globals filtern: Nur Socials & Logo
                         if(key.includes('global_')) {
                             if(!seenGlobals.has(key)) {
                                 seenGlobals.add(key);
@@ -300,7 +365,7 @@
             renderGroups(fieldsToShow, container);
         }
 
-        // === RENDERER & GROUPING ===
+        // === RENDERER ===
         function renderGroups(fields, container) {
             if(!fields || fields.length === 0) {
                 container.innerHTML = '<div style="color:#444; text-align:center; padding-top:40px;">Nichts zu bearbeiten.</div>';
@@ -312,14 +377,10 @@
 
             fields.forEach(f => {
                 const parts = f.key.split('_');
-                // Verbesserte Gruppierung: z.B. "paket_1_titel" -> Gruppe "paket_1"
                 if(parts.length >= 2) {
                     let groupKey = parts[0]; 
                     if(!isNaN(parts[1])) groupKey += `_${parts[1]}`;
-                    
-                    // Für Service Liste (svc_1_name)
                     if(parts[0] === 'svc' && !isNaN(parts[1])) groupKey = `service_${parts[1]}`;
-
                     if(!groups[groupKey]) groups[groupKey] = [];
                     groups[groupKey].push(f);
                 } else {
@@ -369,17 +430,35 @@
             
             let html = `<label class="cms-label-small">${labelText}</label>`;
 
-            if(field.type === 'textarea') {
-                // TOOLBAR FÜR FORMATTIERUNG
+            // -- SOCIAL INPUT --
+            if(field.type === 'social') {
+                let iconSrc = '';
+                if(field.key.includes('whatsapp')) iconSrc = '../whatsapp.png';
+                if(field.key.includes('insta')) iconSrc = '../instagram.png';
+                if(field.key.includes('youtube')) iconSrc = '../youtube.png';
+                if(field.key.includes('tiktok')) iconSrc = '../tiktok.png';
+                
+                // Fallback, falls Icon fehlt: Einfaches Input
+                html += `
+                    <div class="social-input-wrap">
+                        <div class="social-icon-box"><img src="${iconSrc}" onerror="this.style.display='none'"></div>
+                        <input type="text" value="${val.replace(/"/g, '&quot;')}" onchange="updateVal('${field.key}', this.value)" placeholder="https://...">
+                    </div>
+                `;
+            } 
+            // -- TEXTAREA + TOGGLE FORMAT --
+            else if(field.type === 'textarea') {
                 html += `
                     <div class="format-toolbar">
-                        <button class="format-btn" onclick="wrapTags('strong', '${field.key}')" title="Fett"><b>B</b></button>
-                        <button class="format-btn" onclick="wrapTags('em', '${field.key}')" title="Kursiv"><i>I</i></button>
-                        <button class="format-btn" onclick="wrapTags('u', '${field.key}')" title="Unterstrichen"><u>U</u></button>
+                        <button class="format-btn" onclick="toggleTag('strong', '${field.key}')" title="Fett"><b>B</b></button>
+                        <button class="format-btn" onclick="toggleTag('em', '${field.key}')" title="Kursiv"><i>I</i></button>
+                        <button class="format-btn" onclick="toggleTag('u', '${field.key}')" title="Unterstrichen"><u>U</u></button>
                     </div>
                     <textarea id="input-${field.key}" oninput="updateVal('${field.key}', this.value)" class="cms-textarea">${val}</textarea>
                 `;
-            } else if(field.type === 'image') {
+            } 
+            // -- IMAGE --
+            else if(field.type === 'image') {
                 let prevSrc = val;
                 if(val && !val.startsWith('http') && !val.startsWith('data:') && !val.startsWith('../') && !val.startsWith('/')) {
                      prevSrc = '../' + val.replace(/^\.\//, '');
@@ -395,7 +474,6 @@
                             <button onclick="openLibrary('${field.key}')" class="pill pill--ghost" style="font-size:12px; padding:0 12px; height:36px;">Bibliothek</button>
                         </div>
                     </div>
-                    <div style="font-size:11px; color:#444; margin-top:6px;">Quelle: ${val.substring(0,30)}...</div>
                 `;
             } else {
                 html += `<input type="text" value="${val.replace(/"/g, '&quot;')}" oninput="updateVal('${field.key}', this.value)" class="cms-input">`;
@@ -405,23 +483,54 @@
             parent.appendChild(wrap);
         }
 
-        function updateVal(k, v) { contentData[k] = v; }
+        // --- STATE MANAGEMENT ---
+        let debounceTimer;
+        function updateVal(k, v) { 
+            contentData[k] = v;
+            // Debounce History (damit nicht jeder Tastenschlag gespeichert wird)
+            clearTimeout(debounceTimer);
+            debounceTimer = setTimeout(() => addToHistory(contentData), 800);
+        }
         
-        // --- TEXT FORMATTING ---
-        function wrapTags(tag, key) {
+        // --- SMART TOGGLE FORMATTING ---
+        function toggleTag(tag, key) {
             const el = document.getElementById(`input-${key}`);
             const start = el.selectionStart;
             const end = el.selectionEnd;
-            const text = el.value;
-            if(start === end) return; // Nichts markiert
+            let text = el.value;
+            if(start === end) return; 
 
             const selected = text.substring(start, end);
+            const openTag = `<${tag}>`;
+            const closeTag = `</${tag}>`;
+            
+            // Check if already wrapped
+            // Wir schauen etwas grob um die Selection herum
             const before = text.substring(0, start);
             const after = text.substring(end);
             
-            const newText = `${before}<${tag}>${selected}</${tag}>${after}`;
-            el.value = newText;
-            updateVal(key, newText);
+            // Simpler Toggle: Wenn der markierte Text exakt von Tags umschlossen ist (im Selection String)
+            // ODER wenn die Tags direkt davor/danach stehen.
+            
+            // Fall 1: User markiert <b>Text</b> komplett
+            if(selected.startsWith(openTag) && selected.endsWith(closeTag)) {
+                 const unwrapped = selected.substring(openTag.length, selected.length - closeTag.length);
+                 el.value = before + unwrapped + after;
+            } 
+            // Fall 2: User markiert "Text", aber davor steht <b> und danach </b>
+            else if(before.endsWith(openTag) && after.startsWith(closeTag)) {
+                const newBefore = before.substring(0, before.length - openTag.length);
+                const newAfter = after.substring(closeTag.length);
+                el.value = newBefore + selected + newAfter;
+            }
+            // Fall 3: Nicht gewrappt -> Wrappen
+            else {
+                el.value = before + openTag + selected + closeTag + after;
+            }
+
+            updateVal(key, el.value);
+            // Cursor Position fixen
+            // el.setSelectionRange(...) könnte man hier noch machen
         }
 
         // --- IMAGE LOGIC ---
@@ -429,7 +538,7 @@
             const f = inp.files[0];
             if(!f || f.size > 15*1024*1024) return alert('Max 15MB');
             const r = new FileReader();
-            r.onload = e => applyImage(k, e.target.result);
+            r.onload = e => { applyImage(k, e.target.result); addToHistory(contentData); };
             r.readAsDataURL(f);
         }
         function applyImage(k, src) {
@@ -454,7 +563,7 @@
                 const div = document.createElement('img');
                 div.src = d; div.className = 'media-item';
                 div.style.width='100%'; div.style.aspectRatio='1'; div.style.objectFit='cover'; div.style.cursor='pointer';
-                div.onclick = () => { applyImage(currentImageKey, src); document.getElementById('media-modal').style.display='none'; };
+                div.onclick = () => { applyImage(currentImageKey, src); addToHistory(contentData); document.getElementById('media-modal').style.display='none'; };
                 grid.appendChild(div);
             });
             document.getElementById('media-modal').style.display='flex';
@@ -463,15 +572,15 @@
 
         async function saveAll() {
             const btn = document.getElementById('save-btn');
-            const old = btn.innerHTML; btn.innerHTML = '<i class="fa-solid fa-spinner spin"></i> Speichern...';
+            const old = btn.innerText; btn.innerText = '...';
             const res = await fetch(`${API}?action=save`, {
                 method:'POST', headers:{'Authorization':localStorage.getItem('token')},
                 body:JSON.stringify(contentData)
             });
             if(res.ok) { 
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> Gespeichert'; 
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> OK'; 
                 setTimeout(()=>btn.innerHTML=old, 1500); 
-            } else { btn.innerText = 'Fehler'; }
+            } else { btn.innerText = 'Error'; }
         }
 
         checkAuth();
