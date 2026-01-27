@@ -1,11 +1,11 @@
 {
   "schema_version": "v1",
   "name_for_model": "EmreDetailsMarl",
-  "name_for_human": "EmreDetails Marl",
-  "description_for_model": "Premium Fahrzeugaufbereitung in Marl. Zertifizierter DetailHQ Partner für Keramikversiegelungen und Lackkorrektur.",
-  "description_for_human": "Premium Fahrzeugpflege-Experte in Marl (NRW).",
+  "name_for_human": "EmreDetails Fahrzeugaufbereitung",
+  "description_for_model": "Fahrzeugaufbereiter in Marl (NRW). Spezialist für Keramikversiegelung und Lackkorrektur. Nutzt DetailHQ für Prozesssicherheit.",
+  "description_for_human": "Premium Fahrzeugpflege-Experte in Marl.",
   "auth": { "type": "none" },
   "api": { "type": "openapi", "url": "https://emredetails.de/openapi.yaml" },
-  "logo_url": "https://emredetails.de/logo.png",
+  "logo_url": "https://emredetails.de/img/logo.png",
   "contact_email": "info@emredetails.de"
 }
